@@ -29,7 +29,7 @@ public class AuthorService {
     }
 
     public Page<AuthorOverviewDTO> getAllAuthors(Pageable pageable) {
-        return authorRepository.findAll(pageable).map(this::authorEntityToAuthorOverviewDTO);
+        return authorRepository.findAll(pageable).map(authorMapper::authorEntityToAuthorOverviewDTO);
     }
 
     public List<AuthorNameDTO> getAllAuthors() {
@@ -38,16 +38,10 @@ public class AuthorService {
                 .collect(Collectors.toList());
     }
 
-    //todo change to use mapper
-    private AuthorOverviewDTO authorEntityToAuthorOverviewDTO(AuthorEntity author) {
-        return new AuthorOverviewDTO(author.getId(), author.getFullName(), author.getPhotoUrl());
-    }
-
     public AuthorDetailsDTO getAuthorDetails(Long id) {
         AuthorEntity author = authorRepository.findById(id).get();
 
-        return new AuthorDetailsDTO(author.getId(), author.getFullName(),
-                author.getBiography(), author.getPhotoUrl());
+        return authorMapper.authorEntityToAuthorDetailsDTO(author);
     }
 
     public AuthorEntity addNewAuthor(AddNewAuthorDTO authorModel) {

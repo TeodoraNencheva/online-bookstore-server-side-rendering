@@ -1,9 +1,5 @@
 package bg.softuni.onlinebookstore.model.dto.author;
 
-import bg.softuni.onlinebookstore.model.dto.book.BookOverviewDTO;
-
-import java.util.List;
-
 public class AuthorDetailsDTO {
     private Long id;
     private String fullName;
