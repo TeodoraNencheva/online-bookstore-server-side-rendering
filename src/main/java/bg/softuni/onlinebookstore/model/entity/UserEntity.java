@@ -105,4 +105,8 @@ public class UserEntity extends BaseEntity {
     public void emptyCart() {
         cart.clear();
     }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
