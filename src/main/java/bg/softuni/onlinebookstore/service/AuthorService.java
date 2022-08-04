@@ -10,10 +10,12 @@ import bg.softuni.onlinebookstore.repositories.AuthorRepository;
 import bg.softuni.onlinebookstore.repositories.BookRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,22 +41,37 @@ public class AuthorService {
     }
 
     public AuthorDetailsDTO getAuthorDetails(Long id) {
-        AuthorEntity author = authorRepository.findById(id).get();
+        Optional<AuthorEntity> authorOpt = authorRepository.findById(id);
+        if (authorOpt.isEmpty()) {
+            return null;
+        }
 
-        return authorMapper.authorEntityToAuthorDetailsDTO(author);
+        return authorMapper.authorEntityToAuthorDetailsDTO(authorOpt.get());
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public AuthorEntity addNewAuthor(AddNewAuthorDTO authorModel) {
         AuthorEntity newAuthor = new AuthorEntity(authorModel);
         return authorRepository.save(newAuthor);
     }
 
     public AddNewAuthorDTO getAuthorById(Long id) {
-        return authorMapper.authorEntityToAddNewAuthorDTO(authorRepository.findById(id).get());
+        Optional<AuthorEntity> authorOpt = authorRepository.findById(id);
+        if (authorOpt.isEmpty()) {
+            return null;
+        }
+
+        return authorMapper.authorEntityToAddNewAuthorDTO(authorOpt.get());
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public AuthorEntity updateAuthor(AddNewAuthorDTO authorModel, Long id) {
-        AuthorEntity author = authorRepository.findById(id).get();
+        Optional<AuthorEntity> authorOpt = authorRepository.findById(id);
+        if (authorOpt.isEmpty()) {
+            return null;
+        }
+
+        AuthorEntity author = authorOpt.get();
         author.setFirstName(authorModel.getFirstName());
         author.setLastName(authorModel.getLastName());
         author.setBiography(authorModel.getBiography());
@@ -62,6 +79,7 @@ public class AuthorService {
         return authorRepository.save(author);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Transactional
     public void deleteAuthor(Long id) {
         bookRepository.deleteAllByAuthor_Id(id);

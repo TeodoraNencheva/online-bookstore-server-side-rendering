@@ -1,10 +1,12 @@
 package bg.softuni.onlinebookstore.config;
 
+import bg.softuni.onlinebookstore.model.enums.UserRoleEnum;
 import bg.softuni.onlinebookstore.repositories.UserRepository;
 import bg.softuni.onlinebookstore.service.BookstoreUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -28,7 +31,8 @@ public class SecurityConfig {
                 // everyone can download static resources (css, js, images)
                         requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll().
                 // everyone can login and register
-                        antMatchers("/", "/users/login", "/users/register",
+                        antMatchers("/authors/add", "/authors/update/**", "/books/add", "/books/update/**").hasRole(UserRoleEnum.ADMIN.name()).
+                antMatchers("/", "/users/login", "/users/register",
                         "/books/**", "/authors/**", "/api/books/**").permitAll().
                 // all other pages are available for logger in users
                         anyRequest().

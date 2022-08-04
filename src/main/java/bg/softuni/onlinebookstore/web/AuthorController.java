@@ -1,17 +1,20 @@
 package bg.softuni.onlinebookstore.web;
 
 import bg.softuni.onlinebookstore.model.dto.author.AddNewAuthorDTO;
-import bg.softuni.onlinebookstore.model.dto.book.AddNewBookDTO;
+import bg.softuni.onlinebookstore.model.dto.author.AuthorDetailsDTO;
 import bg.softuni.onlinebookstore.model.entity.AuthorEntity;
-import bg.softuni.onlinebookstore.model.entity.BookEntity;
+import bg.softuni.onlinebookstore.model.error.AuthorNotFoundException;
 import bg.softuni.onlinebookstore.service.AuthorService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -39,8 +42,13 @@ public class AuthorController {
 
     @GetMapping("/{id}")
     public String getAuthorDetails(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("author", authorService.getAuthorDetails(id));
+        AuthorDetailsDTO author = authorService.getAuthorDetails(id);
 
+        if (author == null) {
+            throw new AuthorNotFoundException(id);
+        }
+
+        model.addAttribute("author", author);
         return "author-details";
     }
 
@@ -75,8 +83,14 @@ public class AuthorController {
 
     @GetMapping("/update/{id}")
     public String updateAuthor(@PathVariable("id") Long id, Model model) {
+        AddNewAuthorDTO authorModel = authorService.getAuthorById(id);
+
+        if (authorModel == null) {
+            throw new AuthorNotFoundException(id);
+        }
+
         if (!model.containsAttribute("authorModel")) {
-            model.addAttribute("authorModel", authorService.getAuthorById(id));
+            model.addAttribute("authorModel", authorModel);
         }
 
         model.addAttribute("title", "Update Author");
@@ -99,13 +113,28 @@ public class AuthorController {
         }
 
         AuthorEntity updatedAuthor = authorService.updateAuthor(authorModel, id);
-
+        if (updatedAuthor == null) {
+            throw new AuthorNotFoundException(id);
+        }
         return String.format("redirect:/authors/%d", updatedAuthor.getId());
     }
 
     @DeleteMapping("/{id}")
     public String deleteAuthor(@PathVariable("id") Long id) {
+        if (authorService.getAuthorById(id) == null) {
+            throw new AuthorNotFoundException(id);
+        }
+
         authorService.deleteAuthor(id);
         return "redirect:/authors";
+    }
+
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ExceptionHandler({AuthorNotFoundException.class})
+    public ModelAndView onAuthorNotFound(AuthorNotFoundException ex) {
+        ModelAndView modelAndView = new ModelAndView("author-not-found");
+        modelAndView.addObject("authorId", ex.getId());
+
+        return modelAndView;
     }
 }

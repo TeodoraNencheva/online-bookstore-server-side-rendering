@@ -4,16 +4,19 @@ import bg.softuni.onlinebookstore.model.dto.book.*;
 import bg.softuni.onlinebookstore.model.entity.AuthorEntity;
 import bg.softuni.onlinebookstore.model.entity.BookEntity;
 import bg.softuni.onlinebookstore.model.entity.GenreEntity;
+import bg.softuni.onlinebookstore.model.error.GenreNotFoundException;
 import bg.softuni.onlinebookstore.model.mapper.BookMapper;
 import bg.softuni.onlinebookstore.repositories.AuthorRepository;
 import bg.softuni.onlinebookstore.repositories.BookRepository;
 import bg.softuni.onlinebookstore.repositories.GenreRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +34,12 @@ public class BookService {
     }
 
     public BookDetailsDTO getBookDetails(Long id) {
-        return bookMapper.bookEntityToBookDetailsDTO(bookRepository.findById(id).get());
+        Optional<BookEntity> bookOpt = bookRepository.findById(id);
+        if (bookOpt.isEmpty()) {
+            return null;
+        }
+
+        return bookMapper.bookEntityToBookDetailsDTO(bookOpt.get());
     }
 
     public Page<BookOverviewDTO> getAllBooks(Pageable pageable) {
@@ -46,7 +54,14 @@ public class BookService {
 
     public Page<BookOverviewDTO> getBooksByGenre(String genre, Pageable pageable) {
         String genreName = getGenreName(genre);
-        return bookRepository.getAllByGenre_Name(genreName, pageable).map(bookMapper::bookEntityToBookOverviewDTO);
+        Optional<GenreEntity> genreOpt = genreRepository.findByName(genreName);
+
+        if (genreOpt.isEmpty()) {
+            throw new GenreNotFoundException(genreName);
+        }
+
+        return bookRepository.getAllByGenre(genreOpt.get(), pageable)
+                .map(bookMapper::bookEntityToBookOverviewDTO);
     }
 
     public String getGenreName(String genre) {
@@ -62,6 +77,7 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public BookEntity addNewBook(AddNewBookDTO bookModel) {
         AuthorEntity author = authorRepository.findById(bookModel.getAuthorId()).get();
         GenreEntity genre = genreRepository.findById(bookModel.getGenreId()).get();
@@ -70,12 +86,23 @@ public class BookService {
     }
 
     public AddNewBookDTO getBookById(Long id) {
-        BookEntity book = bookRepository.findById(id).get();
+        Optional<BookEntity> bookOpt = bookRepository.findById(id);
+        if (bookOpt.isEmpty()) {
+            return null;
+        }
+
+        BookEntity book = bookOpt.get();
         return bookMapper.bookEntityToAddNewBookDTO(book);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public BookEntity updateBook(AddNewBookDTO bookModel, Long id) {
-        BookEntity book = bookRepository.findById(id).get();
+        Optional<BookEntity> bookOpt = bookRepository.findById(id);
+        if (bookOpt.isEmpty()) {
+            return null;
+        }
+
+        BookEntity book = bookOpt.get();
         AuthorEntity author = authorRepository.findById(bookModel.getAuthorId()).get();
         GenreEntity genre = genreRepository.findById(bookModel.getGenreId()).get();
 
@@ -89,6 +116,7 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
     }

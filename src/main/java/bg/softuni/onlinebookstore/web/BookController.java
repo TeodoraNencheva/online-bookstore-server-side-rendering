@@ -1,17 +1,21 @@
 package bg.softuni.onlinebookstore.web;
 
 import bg.softuni.onlinebookstore.model.dto.book.AddNewBookDTO;
+import bg.softuni.onlinebookstore.model.dto.book.BookDetailsDTO;
 import bg.softuni.onlinebookstore.model.entity.BookEntity;
+import bg.softuni.onlinebookstore.model.error.BookNotFoundException;
 import bg.softuni.onlinebookstore.service.AuthorService;
 import bg.softuni.onlinebookstore.service.BookService;
 import bg.softuni.onlinebookstore.service.GenreService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -58,8 +62,12 @@ public class BookController {
 
     @GetMapping("/{id}/details")
     public String getBookDetails(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("book", bookService.getBookDetails(id));
+        BookDetailsDTO bookDetails = bookService.getBookDetails(id);
+        if (bookDetails == null) {
+            throw new BookNotFoundException(id);
+        }
 
+        model.addAttribute("book", bookDetails);
         return "book-details";
     }
 
@@ -95,8 +103,14 @@ public class BookController {
 
     @GetMapping("/update/{id}")
     public String updateBook(@PathVariable("id") Long id, Model model) {
+        AddNewBookDTO bookModel = bookService.getBookById(id);
+
+        if (bookModel == null) {
+            throw new BookNotFoundException(id);
+        }
+
         if (!model.containsAttribute("bookModel")) {
-            model.addAttribute("bookModel", bookService.getBookById(id));
+            model.addAttribute("bookModel", bookModel);
         }
         model.addAttribute("action", "/books/update/" + id);
         model.addAttribute("buttonText", "Update Book");
@@ -119,13 +133,29 @@ public class BookController {
         }
 
         BookEntity updatedBook = this.bookService.updateBook(bookModel, id);
+        if (updatedBook == null) {
+            throw new BookNotFoundException(id);
+        }
 
         return String.format("redirect:/books/%d/details", updatedBook.getId());
     }
 
     @DeleteMapping("/{id}")
     public String deleteBook(@PathVariable("id") Long id) {
+        if (bookService.getBookById(id) == null) {
+            throw new BookNotFoundException(id);
+        }
+
         bookService.deleteBook(id);
         return "redirect:/books/all";
+    }
+
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ExceptionHandler({BookNotFoundException.class})
+    public ModelAndView onBookNotFound(BookNotFoundException ex) {
+        ModelAndView modelAndView = new ModelAndView("book-not-found");
+        modelAndView.addObject("bookId", ex.getId());
+
+        return modelAndView;
     }
 }

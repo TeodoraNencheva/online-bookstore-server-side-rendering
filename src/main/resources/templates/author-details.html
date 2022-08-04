@@ -34,7 +34,7 @@
                 <form th:action="@{/api/books(authorId = *{id})}" th:method="get" id="loadBooks">
                     <input class="btn btn-success" type="submit" value="Show books of this author">
                 </form>
-                <a type="button" class="btn btn-warning" th:href="@{/authors/update/{authorId}(authorId=*{id})}" sec:authorize="hasRole('ADMIN')">Update</a>
+                <a type="button" sec:authorize="hasRole('ADMIN')" class="btn btn-warning" th:href="@{/authors/update/{authorId}(authorId=*{id})}"> Update</a>
                 <form sec:authorize="hasRole('ADMIN')" th:action="@{/authors/{authorId}(authorId=*{id})}" th:method="delete">
                     <input class="btn btn-danger" type="submit" value="Delete">
                 </form>
