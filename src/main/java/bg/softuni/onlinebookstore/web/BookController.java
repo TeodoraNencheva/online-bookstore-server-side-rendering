@@ -149,13 +149,4 @@ public class BookController {
         bookService.deleteBook(id);
         return "redirect:/books/all";
     }
-
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ExceptionHandler({BookNotFoundException.class})
-    public ModelAndView onBookNotFound(BookNotFoundException ex) {
-        ModelAndView modelAndView = new ModelAndView("book-not-found");
-        modelAndView.addObject("bookId", ex.getId());
-
-        return modelAndView;
-    }
 }

@@ -38,7 +38,7 @@ async function buyBook(event) {
 buyBookForm.addEventListener('submit', buyBook);
 
 function decreaseQuantity() {
-    var newValue = Number(Number(quantityInputField.value) - 1);
+    let newValue = Number(Number(quantityInputField.value) - 1);
     if (newValue <= 0) {
         newValue = 1;
     }

@@ -4,6 +4,7 @@ import bg.softuni.onlinebookstore.model.dto.book.*;
 import bg.softuni.onlinebookstore.model.entity.AuthorEntity;
 import bg.softuni.onlinebookstore.model.entity.BookEntity;
 import bg.softuni.onlinebookstore.model.entity.GenreEntity;
+import bg.softuni.onlinebookstore.model.error.AuthorNotFoundException;
 import bg.softuni.onlinebookstore.model.error.GenreNotFoundException;
 import bg.softuni.onlinebookstore.model.mapper.BookMapper;
 import bg.softuni.onlinebookstore.repositories.AuthorRepository;
@@ -72,7 +73,12 @@ public class BookService {
     }
 
     public List<BookOverviewDTO> getBooksByAuthor(Long authorId) {
-        return bookRepository.getAllByAuthor_Id(authorId).stream()
+        Optional<AuthorEntity> authorOpt = authorRepository.findById(authorId);
+        if (authorOpt.isEmpty()) {
+            throw new AuthorNotFoundException(authorId);
+        }
+
+        return bookRepository.getAllByAuthor(authorOpt.get()).stream()
                 .map(bookMapper::bookEntityToBookOverviewDTO)
                 .collect(Collectors.toList());
     }

@@ -1,13 +1,15 @@
 package bg.softuni.onlinebookstore.web;
 
+import bg.softuni.onlinebookstore.model.error.AuthorNotFoundException;
+import bg.softuni.onlinebookstore.model.error.OrderNotFoundException;
 import bg.softuni.onlinebookstore.service.OrderService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/orders")
@@ -35,6 +37,7 @@ public class OrderController {
 
     @GetMapping("/{id}/details")
     public String getOrderDetails(@PathVariable("id") Long id, Model model) {
+
         model.addAttribute("order", orderService.getOrder(id));
         model.addAttribute("items", orderService.getOrderItems(id));
 
@@ -53,5 +56,14 @@ public class OrderController {
         model.addAttribute("type", "My");
         model.addAttribute("orders", orderService.getLoggedUserOrders(userDetails));
         return "orders";
+    }
+
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ExceptionHandler({OrderNotFoundException.class})
+    public ModelAndView onOrderNotFound(OrderNotFoundException ex) {
+        ModelAndView modelAndView = new ModelAndView("order-not-found");
+        modelAndView.addObject("orderId", ex.getId());
+
+        return modelAndView;
     }
 }

@@ -4,15 +4,19 @@ import bg.softuni.onlinebookstore.model.dto.order.OrderListDTO;
 import bg.softuni.onlinebookstore.model.entity.BookEntity;
 import bg.softuni.onlinebookstore.model.entity.OrderEntity;
 import bg.softuni.onlinebookstore.model.entity.UserEntity;
+import bg.softuni.onlinebookstore.model.error.EmptyCartException;
+import bg.softuni.onlinebookstore.model.error.OrderNotFoundException;
 import bg.softuni.onlinebookstore.model.mapper.OrderMapper;
 import bg.softuni.onlinebookstore.repositories.OrderRepository;
 import bg.softuni.onlinebookstore.repositories.UserRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +34,10 @@ public class OrderService {
     @Transactional
     public void createNewOrder(UserDetails userDetails) {
         UserEntity user = userRepository.findByEmail(userDetails.getUsername()).get();
+        if (user.getCart() == null || user.getCart().isEmpty()) {
+            throw new EmptyCartException("Cannot create order on empty cart!");
+        }
+
         Map<BookEntity, Integer> items = user.getCart();
         OrderEntity newOrder = new OrderEntity(user, items);
         orderRepository.save(newOrder);
@@ -50,16 +58,22 @@ public class OrderService {
     }
 
     public OrderEntity getOrder(Long id) {
-        return orderRepository.findById(id).get();
+        Optional<OrderEntity> orderOpt = orderRepository.findById(id);
+        if (orderOpt.isEmpty()) {
+            throw new OrderNotFoundException(id);
+        }
+
+        return orderOpt.get();
     }
 
     @Transactional
     public Map<BookEntity, Integer> getOrderItems(Long id) {
-        return orderRepository.findById(id).get().getItems();
+        return getOrder(id).getItems();
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void confirmOrder(Long id) {
-        OrderEntity order = orderRepository.findById(id).get();
+        OrderEntity order = getOrder(id);
         order.setProcessed(true);
         orderRepository.save(order);
     }

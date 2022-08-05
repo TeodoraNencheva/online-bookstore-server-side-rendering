@@ -6,6 +6,7 @@ import bg.softuni.onlinebookstore.model.entity.BookEntity;
 import bg.softuni.onlinebookstore.model.entity.UserEntity;
 import bg.softuni.onlinebookstore.model.entity.UserRoleEntity;
 import bg.softuni.onlinebookstore.model.enums.UserRoleEnum;
+import bg.softuni.onlinebookstore.model.error.BookNotFoundException;
 import bg.softuni.onlinebookstore.model.mapper.UserMapper;
 import bg.softuni.onlinebookstore.repositories.BookRepository;
 import bg.softuni.onlinebookstore.repositories.UserRepository;
@@ -72,7 +73,11 @@ public class UserService {
         Optional<UserEntity> userOpt = userRepository.findByEmail(userDetails.getUsername());
         Optional<BookEntity> bookOpt = bookRepository.findById(bookDTO.getBookId());
 
-        if (userOpt.isEmpty() || bookOpt.isEmpty()) {
+        if (bookOpt.isEmpty()) {
+            throw new BookNotFoundException(bookDTO.getBookId());
+        }
+
+        if (userOpt.isEmpty()) {
             return false;
         }
 
@@ -90,8 +95,12 @@ public class UserService {
 
     public void removeItemFromCart(Long bookId, UserDetails userDetails) {
         UserEntity user = getUser(userDetails);
-        BookEntity book = bookRepository.findById(bookId).get();
-        user.removeFromCart(book);
+        Optional<BookEntity> bookOpt = bookRepository.findById(bookId);
+        if (bookOpt.isEmpty()) {
+            throw new BookNotFoundException(bookId);
+        }
+
+        user.removeFromCart(bookOpt.get());
         userRepository.save(user);
     }
 
