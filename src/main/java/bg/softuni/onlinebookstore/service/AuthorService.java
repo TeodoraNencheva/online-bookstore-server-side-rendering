@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthorService {
-    private final AuthorRepository authorRepository;
-    private final BookRepository bookRepository;
-    private final AuthorMapper authorMapper;
+    private AuthorRepository authorRepository;
+    private BookRepository bookRepository;
+    private AuthorMapper authorMapper;
 
     public AuthorService(AuthorRepository authorRepository, BookRepository bookRepository, AuthorMapper authorMapper) {
         this.authorRepository = authorRepository;

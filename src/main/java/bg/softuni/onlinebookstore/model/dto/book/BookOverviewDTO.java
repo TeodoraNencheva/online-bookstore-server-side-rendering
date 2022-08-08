@@ -16,6 +16,14 @@ public class BookOverviewDTO {
     public BookOverviewDTO() {
     }
 
+    public BookOverviewDTO(Long id, String title, AuthorEntity author, String genre, String imageUrl) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+        this.imageUrl = imageUrl;
+    }
+
     public Long getId() {
         return id;
     }

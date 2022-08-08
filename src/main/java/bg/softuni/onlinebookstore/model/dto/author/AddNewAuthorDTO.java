@@ -19,6 +19,13 @@ public class AddNewAuthorDTO {
     public AddNewAuthorDTO() {
     }
 
+    public AddNewAuthorDTO(String firstName, String lastName, String biography, String photoUrl) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.biography = biography;
+        this.photoUrl = photoUrl;
+    }
+
     public String getFirstName() {
         return firstName;
     }

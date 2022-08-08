@@ -1,26 +1,21 @@
 package bg.softuni.onlinebookstore.service;
 
-import bg.softuni.onlinebookstore.model.entity.GenreEntity;
 import bg.softuni.onlinebookstore.model.entity.UserEntity;
 import bg.softuni.onlinebookstore.model.entity.UserRoleEntity;
 import bg.softuni.onlinebookstore.model.enums.UserRoleEnum;
-import bg.softuni.onlinebookstore.repositories.GenreRepository;
 import bg.softuni.onlinebookstore.repositories.UserRepository;
 import bg.softuni.onlinebookstore.repositories.UserRoleRepository;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 
 @Service
 public class SeedService {
     private final UserRoleRepository userRoleRepository;
     private final UserRepository userRepository;
-    private final GenreRepository genreRepository;
 
-    public SeedService(UserRoleRepository userRoleRepository, UserRepository userRepository, GenreRepository genreRepository) {
+    public SeedService(UserRoleRepository userRoleRepository, UserRepository userRepository) {
         this.userRoleRepository = userRoleRepository;
         this.userRepository = userRepository;
-        this.genreRepository = genreRepository;
     }
     
     public void seedUserRoles() {

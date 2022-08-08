@@ -22,6 +22,13 @@ public class AuthorEntity extends BaseEntity {
     public AuthorEntity() {
     }
 
+    public AuthorEntity(String firstName, String lastName, String biography, String photoUrl) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.biography = biography;
+        this.photoUrl = photoUrl;
+    }
+
     public AuthorEntity(AddNewAuthorDTO authorDTO) {
         this.firstName = authorDTO.getFirstName();
         this.lastName = authorDTO.getLastName();
