@@ -21,7 +21,8 @@ public class BookEntity extends BaseEntity {
     @Column(nullable = false)
     private String yearOfPublication;
 
-    @Column(nullable = false, columnDefinition = "text")
+    //@Column(nullable = false, columnDefinition = "text")
+    @Column(nullable = false, length = 65535)
     private String summary;
 
     @Column(nullable = false)
@@ -31,6 +32,16 @@ public class BookEntity extends BaseEntity {
     private BigDecimal price;
 
     public BookEntity() {
+    }
+
+    public BookEntity(String title, AuthorEntity author, GenreEntity genre, String yearOfPublication, String summary, String imageUrl, BigDecimal price) {
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+        this.yearOfPublication = yearOfPublication;
+        this.summary = summary;
+        this.imageUrl = imageUrl;
+        this.price = price;
     }
 
     public BookEntity(AddNewBookDTO bookDTO, AuthorEntity author, GenreEntity genre) {

@@ -1,22 +1,18 @@
 package bg.softuni.onlinebookstore.web;
 
-import bg.softuni.onlinebookstore.model.dto.author.AuthorDetailsDTO;
-import bg.softuni.onlinebookstore.model.dto.author.AuthorOverviewDTO;
-import bg.softuni.onlinebookstore.service.AuthorService;
+import bg.softuni.onlinebookstore.model.entity.AuthorEntity;
+import bg.softuni.onlinebookstore.util.TestDataUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-
-import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -25,33 +21,67 @@ public class AuthorControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private AuthorService authorService;
+    @Autowired
+    private TestDataUtils testDataUtils;
+
+    private AuthorEntity testAuthor;
+
+    @BeforeEach
+    void setUp() {
+        testAuthor = testDataUtils.createTestAuthor();
+    }
+
+    @AfterEach
+    void tearDown() {
+        testDataUtils.cleanUpDatabase();
+    }
 
     @Test
     void testAllAuthorsPageShown() throws Exception {
-        when(authorService.getAllAuthors(PageRequest.of(0, 4,
-                Sort.by("lastName"))))
-                .thenReturn(new PageImpl<>(List.of(
-                        new AuthorOverviewDTO(1L, "Astrid Lindgren", "Astrid photo"),
-                        new AuthorOverviewDTO(2L, "John Steinbeck", "John Steinbeck photo")
-                )));
-
-        mockMvc.perform(get("/authors"))
+           mockMvc.perform(get("/authors"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("authors"));
     }
 
     @Test
     void testAuthorDetailsPageShown() throws Exception {
-        AuthorDetailsDTO authorModel = new AuthorDetailsDTO(1L, "Astrid Lindgren", "short biography",
-                "photo URL");
-        when(authorService.getAuthorDetails(1L))
-                .thenReturn(authorModel);
-
-        mockMvc.perform(get("/authors/1"))
+        mockMvc.perform(get("/authors/{id}", testAuthor.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("author-details"))
-                .andExpect(model().attribute("author", authorModel));
+                .andExpect(model().attributeExists("author"));
+    }
+
+    @Test
+    @WithMockUser(
+            username = "admin@example.com",
+            authorities = "ROLE_ADMIN"
+    )
+    void testDeleteAuthorByAdminWorks() throws Exception {
+        mockMvc.perform(delete("/authors/{id}", testAuthor.getId()).
+                        with(csrf())
+                ).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/authors"));
+    }
+
+    @Test
+    @WithMockUser(
+            username = "user@example.com",
+            authorities = "ROLE_USER"
+    )
+    void testDeleteAuthorByUserForbidden() throws Exception {
+
+        mockMvc.perform(delete("/authors/{id}", testAuthor.getId()).
+                        with(csrf())
+                ).
+                andExpect(status().isForbidden());
+    }
+
+    @Test
+    void testAuthorNotFoundThrownWhenIdIncorrect() throws Exception {
+        mockMvc.perform(get("/authors/100"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("author-not-found"))
+                .andExpect(model().attributeExists("authorId"));
     }
 }

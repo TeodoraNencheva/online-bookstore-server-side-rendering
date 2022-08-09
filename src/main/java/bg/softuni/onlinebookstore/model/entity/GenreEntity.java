@@ -11,6 +11,10 @@ public class GenreEntity extends BaseEntity {
     public GenreEntity() {
     }
 
+    public GenreEntity(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

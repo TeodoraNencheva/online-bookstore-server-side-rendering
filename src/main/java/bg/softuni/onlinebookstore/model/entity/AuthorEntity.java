@@ -13,7 +13,8 @@ public class AuthorEntity extends BaseEntity {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false, columnDefinition = "text")
+    //@Column(nullable = false, columnDefinition = "text")
+    @Column(nullable = false, length = 65535)
     private String biography;
 
     @Column(nullable = false)
