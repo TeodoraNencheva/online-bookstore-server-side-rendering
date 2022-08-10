@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Initializer
-        implements CommandLineRunner
+       implements CommandLineRunner
 {
     private final SeedService seedService;
 
