@@ -14,7 +14,7 @@ import java.util.List;
 public class TestUserDataService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (username.equals("user@example.com")) {
+        if (!username.equals("admin@example.com")) {
             return new BookstoreUserDetails(1L,
                     "first_name",
                     "last_name",

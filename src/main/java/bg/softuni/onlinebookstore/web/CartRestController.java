@@ -21,10 +21,6 @@ public class CartRestController {
         this.bookService = bookService;
     }
 
-    @GetMapping
-    public void getCartItems(@AuthenticationPrincipal UserDetails userDetails) {
-
-    }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<BookAddedToCartDTO> addBookToCart(@AuthenticationPrincipal UserDetails userDetails,

@@ -73,6 +73,7 @@ public class UserService {
                 setAuthentication(auth);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public boolean addBookToCart(UserDetails userDetails, AddBookToCartDTO bookDTO) {
         Optional<UserEntity> userOpt = userRepository.findByEmail(userDetails.getUsername());
         Optional<BookEntity> bookOpt = bookRepository.findById(bookDTO.getBookId());

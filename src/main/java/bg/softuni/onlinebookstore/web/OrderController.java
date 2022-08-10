@@ -1,8 +1,8 @@
 package bg.softuni.onlinebookstore.web;
 
-import bg.softuni.onlinebookstore.model.error.AuthorNotFoundException;
 import bg.softuni.onlinebookstore.model.error.OrderNotFoundException;
 import bg.softuni.onlinebookstore.service.OrderService;
+import bg.softuni.onlinebookstore.user.BookstoreUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,12 +36,16 @@ public class OrderController {
     }
 
     @GetMapping("/{id}/details")
-    public String getOrderDetails(@PathVariable("id") Long id, Model model) {
+    public String getOrderDetails(@PathVariable("id") Long id, Model model,
+                                  @AuthenticationPrincipal BookstoreUserDetails principal) {
+        if (orderService.isOwner(principal.getUsername(), id) || principal.isAdmin()) {
+            model.addAttribute("order", orderService.getOrder(id));
+            model.addAttribute("items", orderService.getOrderItems(id));
 
-        model.addAttribute("order", orderService.getOrder(id));
-        model.addAttribute("items", orderService.getOrderItems(id));
+            return "order-details";
+        }
 
-        return "order-details";
+        return "redirect:/error";
     }
 
     @GetMapping("/{id}/confirm")

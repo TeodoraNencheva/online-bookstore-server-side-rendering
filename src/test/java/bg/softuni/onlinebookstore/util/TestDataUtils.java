@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -17,13 +19,15 @@ public class TestDataUtils {
     private AuthorRepository authorRepository;
     private BookRepository bookRepository;
     private GenreRepository genreRepository;
+    private OrderRepository orderRepository;
 
-    public TestDataUtils(UserRepository userRepository, UserRoleRepository userRoleRepository, AuthorRepository authorRepository, BookRepository bookRepository, GenreRepository genreRepository) {
+    public TestDataUtils(UserRepository userRepository, UserRoleRepository userRoleRepository, AuthorRepository authorRepository, BookRepository bookRepository, GenreRepository genreRepository, OrderRepository orderRepository) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
         this.genreRepository = genreRepository;
+        this.orderRepository = orderRepository;
     }
 
     public void initRoles() {
@@ -78,12 +82,24 @@ public class TestDataUtils {
         return bookRepository.save(book);
     }
 
+    public OrderEntity createTestOrder() {
+        return orderRepository.save(new OrderEntity(createTestUser("user@example.com"),
+                createTestItems()));
+    }
+
+    public Map<BookEntity, Integer> createTestItems() {
+        HashMap<BookEntity, Integer> items = new HashMap<>();
+        items.put(createTestBook(createTestAuthor(), createTestGenre("novel")), 2);
+        return items;
+    }
+
     public Long getAddedBookId() {
         return bookRepository.findAll().stream()
                 .max(Comparator.comparingLong(BookEntity::getId)).get().getId();
     }
 
     public void cleanUpDatabase() {
+        orderRepository.deleteAll();
         userRepository.deleteAll();
         userRoleRepository.deleteAll();
         bookRepository.deleteAll();

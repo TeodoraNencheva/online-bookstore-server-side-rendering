@@ -7,6 +7,11 @@ public class AddBookToCartDTO {
     public AddBookToCartDTO() {
     }
 
+    public AddBookToCartDTO(Long bookId, int quantity) {
+        this.bookId = bookId;
+        this.quantity = quantity;
+    }
+
     public Long getBookId() {
         return bookId;
     }

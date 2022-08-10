@@ -34,7 +34,8 @@ public class SecurityConfig {
                         antMatchers("/orders/mine").hasRole(UserRoleEnum.USER.name()).
                         antMatchers("/authors/add", "/authors/update/**",
                         "/books/add", "/books/update/**",
-                        "/orders/**", "/users/all").hasRole(UserRoleEnum.ADMIN.name()).
+                        "/orders/processed", "/orders/unprocessed", "/orders/statistics",
+                                "/users/all").hasRole(UserRoleEnum.ADMIN.name()).
                 antMatchers("/", "/users/login", "/users/register",
                         "/books/**", "/authors/**", "/api/books/**", "/maintenance").permitAll().
                 // all other pages are available for logger in users

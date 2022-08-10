@@ -11,12 +11,14 @@ import bg.softuni.onlinebookstore.repositories.OrderRepository;
 import bg.softuni.onlinebookstore.repositories.UserRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -93,5 +95,19 @@ public class OrderService {
 
     public void cleanNewOrdersCount() {
         newOrdersCount = 0;
+    }
+
+    public boolean isOwner(String userName, Long id) {
+        Optional<OrderEntity> orderOpt = orderRepository.findById(id);
+        if (orderOpt.isEmpty()) {
+            throw new OrderNotFoundException(id);
+        }
+
+        Optional<UserEntity> userOpt = userRepository.findByEmail(userName);
+        if (userOpt.isEmpty()) {
+            throw new UsernameNotFoundException(userName);
+        }
+
+        return orderOpt.get().getOwner().getEmail().equals(userName);
     }
 }

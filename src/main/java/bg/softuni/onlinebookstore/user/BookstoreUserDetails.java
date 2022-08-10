@@ -53,6 +53,10 @@ public class BookstoreUserDetails implements UserDetails {
         return this.username;
     }
 
+    public boolean isAdmin() {
+        return authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
