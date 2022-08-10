@@ -1,6 +1,7 @@
 package bg.softuni.onlinebookstore.service;
 
 import bg.softuni.onlinebookstore.model.dto.book.AddBookToCartDTO;
+import bg.softuni.onlinebookstore.model.dto.user.UserOverviewDTO;
 import bg.softuni.onlinebookstore.model.dto.user.UserRegistrationDTO;
 import bg.softuni.onlinebookstore.model.entity.BookEntity;
 import bg.softuni.onlinebookstore.model.entity.UserEntity;
@@ -11,17 +12,21 @@ import bg.softuni.onlinebookstore.model.mapper.UserMapper;
 import bg.softuni.onlinebookstore.repositories.BookRepository;
 import bg.softuni.onlinebookstore.repositories.UserRepository;
 import bg.softuni.onlinebookstore.repositories.UserRoleRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -46,8 +51,7 @@ public class UserService {
         UserEntity newUser = userMapper.userRegistrationDtoToUserEntity(userRegistrationDTO);
         newUser.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
 
-        Optional<UserRoleEntity> userRole = this.userRoleRepository.findByName(UserRoleEnum.USER);
-        newUser.addRole(userRole.get());
+        newUser.addRole(getUserRole());
         this.userRepository.save(newUser);
         login(newUser);
     }
@@ -118,5 +122,33 @@ public class UserService {
         return userRepository.findByEmail(username).get()
                 .getRoles()
                 .stream().anyMatch(r -> r.getName().equals(UserRoleEnum.ADMIN));
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void addNewAdmin(String username) {
+        Optional<UserEntity> userOpt = userRepository.findByEmail(username);
+        if (userOpt.isEmpty()) {
+            throw new UsernameNotFoundException(username);
+        }
+
+        UserEntity user = userOpt.get();
+        user.getRoles().remove(getUserRole());
+        user.addRole(getAdminRole());
+        userRepository.save(user);
+    }
+
+    private UserRoleEntity getAdminRole() {
+        return userRoleRepository.findByName(UserRoleEnum.ADMIN).get();
+    }
+
+    private UserRoleEntity getUserRole() {
+        return userRoleRepository.findByName(UserRoleEnum.USER).get();
+    }
+
+    public List<UserOverviewDTO> getAllUsersOverview() {
+        return userRepository.findAll().stream()
+                .filter(u -> !u.getRoles().contains(getAdminRole()))
+                .map(u -> new UserOverviewDTO(u.getFullName(), u.getEmail()))
+                .collect(Collectors.toList());
     }
 }
