@@ -58,6 +58,12 @@ public class OrderController {
         return "orders";
     }
 
+    @GetMapping("/statistics")
+    public String getOrdersStatistics(Model model) {
+        model.addAttribute("count", orderService.getNewOrdersCount());
+        return "orders-statistics";
+    }
+
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler({OrderNotFoundException.class})
     public ModelAndView onOrderNotFound(OrderNotFoundException ex) {

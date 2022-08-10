@@ -24,11 +24,16 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final UserRepository userRepository;
+    private int newOrdersCount = 0;
 
     public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
         this.userRepository = userRepository;
+    }
+
+    public int getNewOrdersCount() {
+        return newOrdersCount;
     }
 
     @Transactional
@@ -43,6 +48,7 @@ public class OrderService {
         orderRepository.save(newOrder);
         user.emptyCart();
         userRepository.save(user);
+        newOrdersCount++;
     }
 
     public List<OrderListDTO> getUnprocessedOrders() {
@@ -83,5 +89,9 @@ public class OrderService {
         return orderRepository.getAllByOwner_Email(userDetails.getUsername())
                 .stream().map(orderMapper::orderEntityToOrderListDTO)
                 .collect(Collectors.toList());
+    }
+
+    public void cleanNewOrdersCount() {
+        newOrdersCount = 0;
     }
 }
