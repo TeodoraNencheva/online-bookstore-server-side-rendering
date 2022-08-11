@@ -34,7 +34,7 @@ public class CartController {
         return "cart";
     }
 
-    @GetMapping("/{id}/remove")
+    @DeleteMapping("/{id}/remove")
     public String removeItem(@PathVariable("id") Long bookId,
                              @AuthenticationPrincipal UserDetails userDetails) {
         userService.removeItemFromCart(bookId, userDetails);
@@ -42,14 +42,14 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    @GetMapping("/removeAll")
+    @DeleteMapping("/removeAll")
     public String removeAllItems(@AuthenticationPrincipal UserDetails userDetails) {
         userService.removeAllItemsFromCart(userDetails);
 
         return "redirect:/cart";
     }
 
-    @GetMapping("/confirm")
+    @PostMapping("/confirm")
     public String confirmOrder(@AuthenticationPrincipal UserDetails userDetails) {
         orderService.createNewOrder(userDetails);
 

@@ -90,10 +90,10 @@ public class OrderControllerIT {
 
     @WithUserDetails(value = "user2@example.com", userDetailsServiceBeanName = "testUserDataService")
     @Test
-    void testGetOrderDetails_OrderNotOwned_Fails() throws Exception {
+    void testGetOrderDetails_OrderNotOwned_ReturnsErrorPage() throws Exception {
         mockMvc.perform(get("/orders/{id}/details", testOrder.getId()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/error"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"));
     }
 
     @WithUserDetails(value = "user2@example.com", userDetailsServiceBeanName = "testUserDataService")

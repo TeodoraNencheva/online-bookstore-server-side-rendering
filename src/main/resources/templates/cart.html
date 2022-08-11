@@ -27,16 +27,24 @@
                     <div class="card-text">
                         <th:block th:text="*{entry.value}"></th:block>
                         x
-                        <a th:href="@{/books/{bookId}/details(bookId=*{entry.key.id})}" th:text="*{entry.key.title}"></a>
+                        <a th:href="@{/books/{bookId}/details(bookId=*{entry.key.id})}"
+                           th:text="*{entry.key.title}"></a>
                         by
-                        <a th:href="@{/authors/{authorId}(authorId=*{entry.key.author.id})}" th:text="*{entry.key.author.fullName}"></a>
+                        <a th:href="@{/authors/{authorId}(authorId=*{entry.key.author.id})}"
+                           th:text="*{entry.key.author.fullName}"></a>
                     </div>
-                    <a th:href="@{/cart/{id}/remove(id=*{entry.key.id})}" class="btn btn-warning">Remove Item</a>
+                    <form th:action="@{/cart/{id}/remove(id=*{entry.key.id})}" th:method="delete">
+                        <input type="submit" class="btn btn-warning" value="Remove Item">
+                    </form>
                 </li>
             </ul>
             <div class="card-body">
-                <a th:href="@{/cart/confirm}" class="btn btn-success">Confirm Order</a>
-                <a th:href="@{/cart/removeAll}" class="btn btn-danger">Remove All Items</a>
+                <form th:action="@{/cart/confirm}" th:method="post">
+                    <input type="submit" class="btn btn-success" value="Confirm Order">
+                </form>
+                <form th:action="@{/cart/removeAll}" th:method="delete">
+                    <input type="submit" class="btn btn-danger" value="Remove All Items">
+                </form>
             </div>
         </div>
     </div>

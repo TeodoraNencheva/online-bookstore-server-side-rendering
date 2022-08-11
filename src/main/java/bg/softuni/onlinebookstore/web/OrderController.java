@@ -45,10 +45,10 @@ public class OrderController {
             return "order-details";
         }
 
-        return "redirect:/error";
+        return "error";
     }
 
-    @GetMapping("/{id}/confirm")
+    @PostMapping("/{id}/confirm")
     public String confirmOrder(@PathVariable("id") Long id) {
         orderService.confirmOrder(id);
         return "redirect:/orders/unprocessed";
@@ -56,7 +56,7 @@ public class OrderController {
 
     @GetMapping("/mine")
     public String getMyOrders(@AuthenticationPrincipal UserDetails userDetails,
-            Model model) {
+                              Model model) {
         model.addAttribute("type", "My");
         model.addAttribute("orders", orderService.getLoggedUserOrders(userDetails));
         return "orders";

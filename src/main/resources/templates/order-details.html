@@ -42,9 +42,10 @@
                     </div>
                 </li>
             </ul>
-            <div th:unless="*{order.isProcessed}" sec:authorize="hasRole('ADMIN')" class="card-body">
-                <a th:href="@{/orders/{id}/confirm(id=*{id})}" class="btn btn-success">Confirm Order</a>
-            </div>
+            <form th:unless="*{order.isProcessed}" sec:authorize="hasRole('ADMIN')" class="card-body"
+                  th:action="@{/orders/{id}/confirm(id=*{id})}" th:method="post">
+                <input type="submit" class="btn btn-success" value="Confirm order">
+            </form>
         </div>
     </div>
 </div>
