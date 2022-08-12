@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Initializer
-//      implements CommandLineRunner
+      implements CommandLineRunner
 {
     private final SeedService seedService;
 
@@ -14,7 +14,7 @@ public class Initializer
         this.seedService = seedService;
     }
 
-   // @Override
+    @Override
     public void run(String... args) throws Exception {
         this.seedService.seedUserRoles();
         this.seedService.addAdmin();
