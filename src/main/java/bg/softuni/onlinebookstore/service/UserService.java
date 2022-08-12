@@ -119,6 +119,12 @@ public class UserService {
         return userRepository.findByEmail(userDetails.getUsername()).get();
     }
 
+    public boolean isAdmin(String username) {
+        return userRepository.findByEmail(username).get()
+                .getRoles()
+                .stream().anyMatch(r -> r.getName().equals(UserRoleEnum.ADMIN));
+    }
+
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void addNewAdmin(String username) {
         Optional<UserEntity> userOpt = userRepository.findByEmail(username);

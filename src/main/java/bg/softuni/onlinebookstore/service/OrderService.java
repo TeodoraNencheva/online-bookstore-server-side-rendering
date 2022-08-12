@@ -98,13 +98,16 @@ public class OrderService {
     }
 
     public boolean isOwner(String userName, Long id) {
-        OrderEntity order = getOrder(id);
+        Optional<OrderEntity> orderOpt = orderRepository.findById(id);
+        if (orderOpt.isEmpty()) {
+            throw new OrderNotFoundException(id);
+        }
 
         Optional<UserEntity> userOpt = userRepository.findByEmail(userName);
         if (userOpt.isEmpty()) {
             throw new UsernameNotFoundException(userName);
         }
 
-        return order.getOwner().getEmail().equals(userName);
+        return orderOpt.get().getOwner().getEmail().equals(userName);
     }
 }
