@@ -15,7 +15,7 @@ public class BookEntity extends BaseEntity {
     @ManyToOne(optional = false)
     private AuthorEntity author;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private GenreEntity genre;
 
     @Column(nullable = false)
