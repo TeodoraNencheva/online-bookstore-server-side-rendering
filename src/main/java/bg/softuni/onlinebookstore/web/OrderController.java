@@ -37,7 +37,8 @@ public class OrderController {
     }
 
 
-    @PreAuthorize("@orderService.isOwner(#principal.username, #id) or #principal.admin")
+    //@PreAuthorize("@orderService.isOwner(#principal.username, #id) or #principal.admin")
+    @PreAuthorize("isOwner(#id)")
     @GetMapping("/{id}/details")
     public String getOrderDetails(@PathVariable("id") Long id, Model model,
                                   @AuthenticationPrincipal BookstoreUserDetails principal) {
