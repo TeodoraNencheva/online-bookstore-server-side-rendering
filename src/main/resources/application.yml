@@ -13,6 +13,13 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            clientId:
+            clientSecret:
   sql:
     init:
       mode: always

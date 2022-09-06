@@ -47,6 +47,20 @@ public class UserService {
         this.bookRepository = bookRepository;
     }
 
+    public void createUserIfNotExists(String email, String name) {
+        Optional<UserEntity> userOpt = this.userRepository.findByEmail(email);
+
+        if (userOpt.isEmpty()) {
+            UserEntity newUser = new UserEntity();
+            newUser.setEmail(email);
+            newUser.setPassword(null);
+            newUser.setFirstName(name.substring(0, name.indexOf(' ')));
+            newUser.setLastName(name.substring(name.indexOf(' ') + 1));
+            newUser.addRole(getUserRole());
+            userRepository.save(newUser);
+        }
+    }
+
     public void registerAndLogin(UserRegistrationDTO userRegistrationDTO) {
 
         UserEntity newUser = userMapper.userRegistrationDtoToUserEntity(userRegistrationDTO);
@@ -54,13 +68,13 @@ public class UserService {
 
         newUser.addRole(getUserRole());
         this.userRepository.save(newUser);
-        login(newUser);
+        login(newUser.getEmail());
     }
 
 
-    private void login(UserEntity userEntity) {
+    public void login(String username) {
         UserDetails userDetails =
-                userDetailsService.loadUserByUsername(userEntity.getEmail());
+                userDetailsService.loadUserByUsername(username);
 
         Authentication auth =
                 new UsernamePasswordAuthenticationToken(

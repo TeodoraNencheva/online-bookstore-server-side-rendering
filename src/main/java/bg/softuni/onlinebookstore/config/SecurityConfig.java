@@ -3,6 +3,7 @@ package bg.softuni.onlinebookstore.config;
 import bg.softuni.onlinebookstore.model.enums.UserRoleEnum;
 import bg.softuni.onlinebookstore.repositories.UserRepository;
 import bg.softuni.onlinebookstore.service.BookstoreUserDetailsService;
+import bg.softuni.onlinebookstore.service.OAuthSuccessHandler;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +23,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           OAuthSuccessHandler oAuthSuccessHandler) throws Exception {
 
         http.
                 // define which requests are allowed and which not
@@ -63,7 +65,12 @@ public class SecurityConfig {
                         logoutSuccessUrl("/").
                 // invalidate the session and delete the cookies
                         invalidateHttpSession(true).
-                deleteCookies("JSESSIONID");
+                deleteCookies("JSESSIONID").
+                and().
+                //allow oauth login
+                        oauth2Login().
+                loginPage("/users/login").
+                successHandler(oAuthSuccessHandler);
 
 
         return http.build();
