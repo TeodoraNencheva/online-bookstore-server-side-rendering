@@ -16,3 +16,13 @@ spring:
   sql:
     init:
       mode: always
+springdoc:
+  springdoc:
+    api-docs:
+      enabled: true
+      path: /v3/api-docs/swagger-config
+    swagger-ui:
+      path: /index.html
+      disable-swagger-default-url: true
+      config-url: /v3/api-docs/swagger-config
+      url: /v3/api-docs

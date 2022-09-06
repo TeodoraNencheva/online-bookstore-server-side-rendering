@@ -27,6 +27,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.hsqldb:hsqldb'
 	runtimeOnly 'mysql:mysql-connector-java'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
 }
 
 tasks.named('test') {

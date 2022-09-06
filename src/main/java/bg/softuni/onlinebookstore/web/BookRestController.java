@@ -3,6 +3,9 @@ package bg.softuni.onlinebookstore.web;
 import bg.softuni.onlinebookstore.model.dto.book.BookOverviewDTO;
 import bg.softuni.onlinebookstore.model.error.AuthorNotFoundException;
 import bg.softuni.onlinebookstore.service.BookService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +21,11 @@ public class BookRestController {
         this.bookService = bookService;
     }
 
+    @Tag(name = "Get books by author", description = "Returns all books by a given author ID")
+    @Parameter(name = "authorId", description = "The id of the author of the books",
+            required = true)
+    @ApiResponse(responseCode = "200", description = "If the author id is valid")
+    @ApiResponse(responseCode = "404", description = "If the author id is invalid")
     @GetMapping
     public ResponseEntity<List<BookOverviewDTO>> getBooksByAuthor(
             @RequestParam(value = "authorId") Long authorId) {
