@@ -4,6 +4,7 @@ import bg.softuni.onlinebookstore.model.error.OrderNotFoundException;
 import bg.softuni.onlinebookstore.service.OrderService;
 import bg.softuni.onlinebookstore.user.BookstoreUserDetails;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -35,17 +36,14 @@ public class OrderController {
         return "orders";
     }
 
+
+    @PreAuthorize("@orderService.isOwner(#principal.username, #id) or #principal.admin")
     @GetMapping("/{id}/details")
     public String getOrderDetails(@PathVariable("id") Long id, Model model,
                                   @AuthenticationPrincipal BookstoreUserDetails principal) {
-        if (orderService.isOwner(principal.getUsername(), id) || principal.isAdmin()) {
-            model.addAttribute("order", orderService.getOrder(id));
-            model.addAttribute("items", orderService.getOrderItems(id));
-
-            return "order-details";
-        }
-
-        return "error";
+        model.addAttribute("order", orderService.getOrder(id));
+        model.addAttribute("items", orderService.getOrderItems(id));
+        return "order-details";
     }
 
     @PostMapping("/{id}/confirm")

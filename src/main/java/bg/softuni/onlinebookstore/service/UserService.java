@@ -12,6 +12,7 @@ import bg.softuni.onlinebookstore.model.mapper.UserMapper;
 import bg.softuni.onlinebookstore.repositories.BookRepository;
 import bg.softuni.onlinebookstore.repositories.UserRepository;
 import bg.softuni.onlinebookstore.repositories.UserRoleRepository;
+import bg.softuni.onlinebookstore.user.BookstoreUserDetails;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

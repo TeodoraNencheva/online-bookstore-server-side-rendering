@@ -90,10 +90,9 @@ public class OrderControllerIT {
 
     @WithUserDetails(value = "user2@example.com", userDetailsServiceBeanName = "testUserDataService")
     @Test
-    void testGetOrderDetails_OrderNotOwned_ReturnsErrorPage() throws Exception {
+    void testGetOrderDetails_OrderNotOwned_IsForbidden() throws Exception {
         mockMvc.perform(get("/orders/{id}/details", testOrder.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("error"));
+                .andExpect(status().isForbidden());
     }
 
     @WithUserDetails(value = "user2@example.com", userDetailsServiceBeanName = "testUserDataService")
