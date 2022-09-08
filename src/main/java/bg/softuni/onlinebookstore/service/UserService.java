@@ -3,16 +3,19 @@ package bg.softuni.onlinebookstore.service;
 import bg.softuni.onlinebookstore.model.dto.book.AddBookToCartDTO;
 import bg.softuni.onlinebookstore.model.dto.user.UserOverviewDTO;
 import bg.softuni.onlinebookstore.model.dto.user.UserRegistrationDTO;
+import bg.softuni.onlinebookstore.model.email.AccountVerificationEmailContext;
 import bg.softuni.onlinebookstore.model.entity.BookEntity;
+import bg.softuni.onlinebookstore.model.entity.SecureTokenEntity;
 import bg.softuni.onlinebookstore.model.entity.UserEntity;
 import bg.softuni.onlinebookstore.model.entity.UserRoleEntity;
 import bg.softuni.onlinebookstore.model.enums.UserRoleEnum;
 import bg.softuni.onlinebookstore.model.error.BookNotFoundException;
 import bg.softuni.onlinebookstore.model.mapper.UserMapper;
 import bg.softuni.onlinebookstore.repositories.BookRepository;
+import bg.softuni.onlinebookstore.repositories.SecureTokenRepository;
 import bg.softuni.onlinebookstore.repositories.UserRepository;
 import bg.softuni.onlinebookstore.repositories.UserRoleRepository;
-import bg.softuni.onlinebookstore.user.BookstoreUserDetails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +26,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
@@ -37,14 +41,23 @@ public class UserService {
     private final UserDetailsService userDetailsService;
     private final UserRoleRepository userRoleRepository;
     private final BookRepository bookRepository;
+    private final SecureTokenService secureTokenService;
+    private final SecureTokenRepository secureTokenRepository;
+    private final EmailService emailService;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, UserRoleRepository userRoleRepository, BookRepository bookRepository) {
+    @Value("${site.base.url}")
+    private String baseURL;
+
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, UserRoleRepository userRoleRepository, BookRepository bookRepository, SecureTokenService secureTokenService, SecureTokenRepository secureTokenRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
         this.userRoleRepository = userRoleRepository;
         this.bookRepository = bookRepository;
+        this.secureTokenService = secureTokenService;
+        this.secureTokenRepository = secureTokenRepository;
+        this.emailService = emailService;
     }
 
     public void createUserIfNotExists(String email, String name) {
@@ -61,16 +74,31 @@ public class UserService {
         }
     }
 
-    public void registerAndLogin(UserRegistrationDTO userRegistrationDTO) {
+    public void register(UserRegistrationDTO userRegistrationDTO) {
 
         UserEntity newUser = userMapper.userRegistrationDtoToUserEntity(userRegistrationDTO);
         newUser.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
 
         newUser.addRole(getUserRole());
-        this.userRepository.save(newUser);
-        login(newUser.getEmail());
+        sendRegistrationConfirmationEmail(this.userRepository.save(newUser));
     }
 
+    private void sendRegistrationConfirmationEmail(UserEntity user) {
+        SecureTokenEntity secureToken = secureTokenService.createSecureToken();
+        secureToken.setUser(user);
+        secureTokenRepository.save(secureToken);
+
+        AccountVerificationEmailContext emailContext = new AccountVerificationEmailContext();
+        emailContext.init(user);
+        emailContext.setToken(secureToken.getToken());
+        emailContext.buildVerificationUrl(baseURL, secureToken.getToken());
+
+        try {
+            emailService.sendEmail(emailContext);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void login(String username) {
         UserDetails userDetails =

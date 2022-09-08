@@ -29,6 +29,7 @@ dependencies {
 	testRuntimeOnly 'org.hsqldb:hsqldb'
 	runtimeOnly 'mysql:mysql-connector-java'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
+	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.3'
 }
 
 tasks.named('test') {

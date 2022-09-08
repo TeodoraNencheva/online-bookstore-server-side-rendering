@@ -50,7 +50,7 @@ public class UserRegistrationControllerIT {
                         .param("password", "topsecret")
                         .param("confirmPassword", "topsecret")
                         .with(csrf()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("need-for-verification"));
     }
 }

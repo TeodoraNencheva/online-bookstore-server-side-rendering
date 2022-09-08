@@ -16,8 +16,12 @@ public class UserEntity extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    //@Column(nullable = false)
     private String password;
+
+    private boolean accountVerified;
+
+    @OneToMany(targetEntity = SecureTokenEntity.class, mappedBy = "user")
+    private Set<SecureTokenEntity> tokens;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
@@ -73,6 +77,22 @@ public class UserEntity extends BaseEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isAccountVerified() {
+        return accountVerified;
+    }
+
+    public void setAccountVerified(boolean accountVerified) {
+        this.accountVerified = accountVerified;
+    }
+
+    public Set<SecureTokenEntity> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(Set<SecureTokenEntity> tokens) {
+        this.tokens = tokens;
     }
 
     public Set<UserRoleEntity> getRoles() {

@@ -19,7 +19,7 @@ public class TestUserDataService implements UserDetailsService {
                     "first_name",
                     "last_name",
                     username,
-                    "1234",
+                    "1234", true,
                     List.of(new SimpleGrantedAuthority("ROLE_USER")));
         }
 
@@ -27,7 +27,7 @@ public class TestUserDataService implements UserDetailsService {
                 "first_name",
                 "last_name",
                 username,
-                "1234",
+                "1234", true,
                 List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
     }
 }

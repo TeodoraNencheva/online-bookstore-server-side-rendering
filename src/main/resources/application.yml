@@ -23,6 +23,21 @@ spring:
   sql:
     init:
       mode: always
+
+      #SMTP configuration
+  mail:
+    host:
+    port:
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
 springdoc:
   springdoc:
     api-docs:
@@ -33,3 +48,11 @@ springdoc:
       disable-swagger-default-url: true
       config-url: /v3/api-docs/swagger-config
       url: /v3/api-docs
+
+#secure token configuration
+secure:
+  token:
+    validity: 2
+site:
+  base:
+    url: http://localhost:8080

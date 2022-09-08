@@ -53,7 +53,7 @@ public class OrderControllerIT {
     }
 
     @Test
-    @WithMockUser(authorities = "ROLE_ADMIN")
+    @WithUserDetails(value = "admin@example.com", userDetailsServiceBeanName = "testUserDataService")
     void testGetOrdersAdmin_Success() throws Exception {
         mockMvc.perform(get("/orders/processed"))
                 .andExpect(status().isOk())
@@ -65,10 +65,11 @@ public class OrderControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(view().name("orders"))
                 .andExpect(model().attribute("type", "Unprocessed"))
-                .andExpect(model().attributeExists("orders"));;
+                .andExpect(model().attributeExists("orders"));
+        ;
     }
 
-    @WithMockUser(authorities = "ROLE_USER")
+    @WithUserDetails(value = "user@example.com", userDetailsServiceBeanName = "testUserDataService")
     @Test
     void testGetMyOrdersLoggedUser_Success() throws Exception {
         mockMvc.perform(get("/orders/mine"))

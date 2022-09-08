@@ -9,16 +9,20 @@ public class BookstoreUserDetails implements UserDetails {
     private final Long id;
     private final String firstName;
     private final String lastName;
+    private final String fullName;
     private final String username;
     private final String password;
+    private boolean isEnabled;
     private final Collection<GrantedAuthority> authorities;
 
-    public BookstoreUserDetails(Long id, String firstName, String lastName, String username, String password, Collection<GrantedAuthority> authorities) {
+    public BookstoreUserDetails(Long id, String firstName, String lastName, String username, String password, boolean isEnabled, Collection<GrantedAuthority> authorities) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.fullName = firstName.isEmpty() ? lastName : firstName + " " + lastName;
         this.username = username;
         this.password = password;
+        this.isEnabled = isEnabled;
         this.authorities = authorities;
     }
 
@@ -35,7 +39,7 @@ public class BookstoreUserDetails implements UserDetails {
     }
 
     public String getFullName() {
-        return firstName + " " + lastName;
+        return fullName;
     }
 
     @Override
@@ -74,6 +78,6 @@ public class BookstoreUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isEnabled;
     }
 }

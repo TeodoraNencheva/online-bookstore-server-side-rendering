@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -60,7 +61,7 @@ public class BookControllerIT {
                 .andExpect(status().isForbidden());
     }
 
-    @WithMockUser(authorities = "ROLE_ADMIN")
+    @WithUserDetails(value = "admin@example.com", userDetailsServiceBeanName = "testUserDataService")
     @Test
     void testAddBookPageAdminShown() throws Exception {
         mockMvc.perform(get("/books/add"))
@@ -116,7 +117,7 @@ public class BookControllerIT {
                 .andExpect(view().name("redirect:/books/add"));
     }
 
-    @WithMockUser(authorities = "ROLE_ADMIN")
+    @WithUserDetails(value = "admin@example.com", userDetailsServiceBeanName = "testUserDataService")
     @Test
     void testUpdateBookPageAdminShown() throws Exception {
         mockMvc.perform(get("/books/update/{id}", testBook.getId()))

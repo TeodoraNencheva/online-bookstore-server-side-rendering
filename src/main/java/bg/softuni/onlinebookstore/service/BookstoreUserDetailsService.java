@@ -6,10 +6,12 @@ import bg.softuni.onlinebookstore.repositories.UserRepository;
 import bg.softuni.onlinebookstore.user.BookstoreUserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BookstoreUserDetailsService implements UserDetailsService {
@@ -23,10 +25,12 @@ public class BookstoreUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        return userRepository
-                .findByEmail(username)
-                .map(this::map)
-                .orElseThrow(() -> new UsernameNotFoundException("User with email " + username + " not found!"));
+        Optional<UserEntity> userOpt = userRepository.findByEmail(username);
+        if (userOpt.isEmpty()) {
+            throw new UsernameNotFoundException("User with email " + username + " not found!");
+        }
+
+        return this.map(userOpt.get());
     }
 
     private UserDetails map(UserEntity userEntity) {
@@ -37,6 +41,7 @@ public class BookstoreUserDetailsService implements UserDetailsService {
                 userEntity.getLastName(),
                 userEntity.getEmail(),
                 userEntity.getPassword(),
+                userEntity.isAccountVerified(),
                 userEntity.
                         getRoles().
                         stream().
@@ -48,4 +53,6 @@ public class BookstoreUserDetailsService implements UserDetailsService {
         return new SimpleGrantedAuthority("ROLE_" +
                 userRole.getName().name());
     }
+
+
 }

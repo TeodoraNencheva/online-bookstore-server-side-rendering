@@ -3,6 +3,7 @@ package bg.softuni.onlinebookstore.web;
 import bg.softuni.onlinebookstore.model.dto.user.UserRegistrationDTO;
 import bg.softuni.onlinebookstore.service.UserService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,36 +17,36 @@ import javax.validation.Valid;
 @RequestMapping("/users")
 public class UserRegistrationController {
 
-  private final UserService userService;
+    private final UserService userService;
 
-  public UserRegistrationController(UserService userService) {
-    this.userService = userService;
-  }
-
-  @ModelAttribute("userModel")
-  public UserRegistrationDTO initUserModel() {
-    return new UserRegistrationDTO();
-  }
-
-  @GetMapping("/register")
-  public String register() {
-    return "auth-register";
-  }
-
-  @PostMapping("/register")
-  public String register(@Valid UserRegistrationDTO userModel,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes) {
-
-    if (bindingResult.hasErrors()) {
-      redirectAttributes.addFlashAttribute("userModel", userModel);
-      redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userModel",
-              bindingResult);
-      return "redirect:/users/register";
+    public UserRegistrationController(UserService userService) {
+        this.userService = userService;
     }
 
-    this.userService.registerAndLogin(userModel);
+    @ModelAttribute("userModel")
+    public UserRegistrationDTO initUserModel() {
+        return new UserRegistrationDTO();
+    }
 
-    return "redirect:/";
-  }
+    @GetMapping("/register")
+    public String register() {
+        return "auth-register";
+    }
+
+    @PostMapping("/register")
+    public String register(@Valid UserRegistrationDTO userModel,
+                           BindingResult bindingResult,
+                           RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("userModel", userModel);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userModel",
+                    bindingResult);
+            return "redirect:/users/register";
+        }
+
+        this.userService.register(userModel);
+
+        return "need-for-verification";
+    }
 }

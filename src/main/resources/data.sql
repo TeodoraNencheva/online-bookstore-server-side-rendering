@@ -1,5 +1,5 @@
-INSERT INTO users (first_name, last_name, email, password)
-VALUES ('Teodora', 'Nencheva', 'Teodora.n@gmail.com', '8872e57546cbfea60f01b1270370d1337adc11b933ca26d6e7d4dc4619c7c51c239d529bc044b6b4');
+INSERT INTO users (first_name, last_name, email, password, account_verified)
+VALUES ('Teodora', 'Nencheva', 'Teodora.n@gmail.com', '8872e57546cbfea60f01b1270370d1337adc11b933ca26d6e7d4dc4619c7c51c239d529bc044b6b4', true);
 
 insert into authors (first_name, last_name, biography, photo_url)
 values ('William Somerset', 'Maugham', 'William Somerset Maugham, better known as W. Somerset Maugham, was born on January 25, 1874, Paris, France. He was an English novelist, playwright, and short-story writer whose work is characterized by a clear unadorned style, cosmopolitan settings, and a shrewd understanding of human nature.',
