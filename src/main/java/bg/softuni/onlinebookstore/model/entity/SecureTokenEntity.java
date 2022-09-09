@@ -23,9 +23,6 @@ public class SecureTokenEntity extends BaseEntity {
     @ManyToOne
     private UserEntity user;
 
-    @Transient
-    private boolean isExpired;
-
     public SecureTokenEntity() {
     }
 
@@ -54,11 +51,7 @@ public class SecureTokenEntity extends BaseEntity {
     }
 
     public boolean isExpired() {
-        return isExpired;
-    }
-
-    public void setExpired(boolean expired) {
-        isExpired = expired;
+        return expireAt.isBefore(LocalDateTime.now());
     }
 
     public UserEntity getUser() {

@@ -59,7 +59,8 @@ public class CartController {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler({EmptyCartException.class})
     public ModelAndView onEmptyCart(EmptyCartException ex) {
-        ModelAndView modelAndView = new ModelAndView("empty-cart-exception");
+        ModelAndView modelAndView = new ModelAndView("object-not-found");
+        modelAndView.addObject("title", "Cart is empty");
         modelAndView.addObject("message", ex.getMessage());
 
         return modelAndView;

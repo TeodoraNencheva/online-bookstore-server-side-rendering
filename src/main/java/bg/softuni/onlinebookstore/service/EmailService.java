@@ -23,11 +23,6 @@ public class EmailService {
         this.templateEngine = templateEngine;
     }
 
-    //    public EmailService() {
-//        this.emailSender = new JavaMailSenderImpl();
-//        this.templateEngine = new SpringTemplateEngine();
-//    }
-
     public void sendEmail(AbstractEmailContext email) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message,

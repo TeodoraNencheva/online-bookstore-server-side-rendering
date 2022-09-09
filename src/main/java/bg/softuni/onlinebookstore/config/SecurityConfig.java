@@ -39,7 +39,7 @@ public class SecurityConfig {
                         "/users/all").hasRole(UserRoleEnum.ADMIN.name()).
                 antMatchers("/", "/books/**", "/authors/**",
                         "/api/books/**", "/maintenance", "/swagger-ui/**").permitAll().
-                antMatchers("/users/login", "/users/register").anonymous().
+                antMatchers("/users/login", "/users/register/**").anonymous().
                 // all other pages are available for logger in users
                         anyRequest().
                 authenticated().

@@ -81,7 +81,8 @@ public class AuthorControllerIT {
     void testAuthorNotFoundThrownWhenIdIncorrect() throws Exception {
         mockMvc.perform(get("/authors/100"))
                 .andExpect(status().isNotFound())
-                .andExpect(view().name("author-not-found"))
-                .andExpect(model().attributeExists("authorId"));
+                .andExpect(view().name("object-not-found"))
+                .andExpect(model().attributeExists("message"))
+                .andExpect(model().attributeExists("title"));
     }
 }

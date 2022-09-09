@@ -10,6 +10,7 @@ import bg.softuni.onlinebookstore.model.entity.UserEntity;
 import bg.softuni.onlinebookstore.model.entity.UserRoleEntity;
 import bg.softuni.onlinebookstore.model.enums.UserRoleEnum;
 import bg.softuni.onlinebookstore.model.error.BookNotFoundException;
+import bg.softuni.onlinebookstore.model.error.InvalidTokenException;
 import bg.softuni.onlinebookstore.model.mapper.UserMapper;
 import bg.softuni.onlinebookstore.repositories.BookRepository;
 import bg.softuni.onlinebookstore.repositories.SecureTokenRepository;
@@ -30,6 +31,7 @@ import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -83,7 +85,7 @@ public class UserService {
         sendRegistrationConfirmationEmail(this.userRepository.save(newUser));
     }
 
-    private void sendRegistrationConfirmationEmail(UserEntity user) {
+    public void sendRegistrationConfirmationEmail(UserEntity user) {
         SecureTokenEntity secureToken = secureTokenService.createSecureToken();
         secureToken.setUser(user);
         secureTokenRepository.save(secureToken);
@@ -188,5 +190,21 @@ public class UserService {
                 .filter(u -> !u.getRoles().contains(getAdminRole()))
                 .map(u -> new UserOverviewDTO(u.getFullName(), u.getEmail()))
                 .collect(Collectors.toList());
+    }
+
+    public void verifyUser(String token) {
+        Optional<SecureTokenEntity> tokenOpt = secureTokenRepository.findByToken(token);
+        if (tokenOpt.isEmpty() || tokenOpt.get().isExpired()) {
+            throw new InvalidTokenException("Token is not valid");
+        }
+
+        UserEntity user = tokenOpt.get().getUser();
+        if (user == null) {
+            return;
+        }
+
+        user.setAccountVerified(true);
+        userRepository.save(user);
+        secureTokenRepository.delete(tokenOpt.get());
     }
 }

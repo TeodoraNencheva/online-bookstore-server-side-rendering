@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Author not found</title>
+    <title th:text="${title}"></title>
     <link rel="stylesheet" href="/css/reset-css.css"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="/css/main.css"/>
@@ -16,7 +16,7 @@
 <div th:replace="fragments/navbar">Navbar</div>
 
 <div class="container-fluid">
-    <h2 class="text-center text-white mt-5">Author with id <th:block th:text="${authorId}"></th:block> not found</h2>
+    <h2 class="text-center text-white mt-5" th:text="${message}"></h2>
 </div>
 
 <div>

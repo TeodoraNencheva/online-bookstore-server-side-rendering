@@ -20,9 +20,6 @@ public class UserEntity extends BaseEntity {
 
     private boolean accountVerified;
 
-    @OneToMany(targetEntity = SecureTokenEntity.class, mappedBy = "user")
-    private Set<SecureTokenEntity> tokens;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -85,14 +82,6 @@ public class UserEntity extends BaseEntity {
 
     public void setAccountVerified(boolean accountVerified) {
         this.accountVerified = accountVerified;
-    }
-
-    public Set<SecureTokenEntity> getTokens() {
-        return tokens;
-    }
-
-    public void setTokens(Set<SecureTokenEntity> tokens) {
-        this.tokens = tokens;
     }
 
     public Set<UserRoleEntity> getRoles() {

@@ -70,8 +70,9 @@ public class OrderController {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler({OrderNotFoundException.class})
     public ModelAndView onOrderNotFound(OrderNotFoundException ex) {
-        ModelAndView modelAndView = new ModelAndView("order-not-found");
-        modelAndView.addObject("orderId", ex.getId());
+        ModelAndView modelAndView = new ModelAndView("object-not-found");
+        modelAndView.addObject("title", "Order not found");
+        modelAndView.addObject("message", String.format("Order with id %s not found", ex.getId()));
 
         return modelAndView;
     }

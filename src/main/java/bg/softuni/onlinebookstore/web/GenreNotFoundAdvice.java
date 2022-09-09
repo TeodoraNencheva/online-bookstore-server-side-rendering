@@ -12,8 +12,9 @@ public class GenreNotFoundAdvice {
     @ExceptionHandler({GenreNotFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ModelAndView onGenreNotFound(GenreNotFoundException ex) {
-        ModelAndView modelAndView = new ModelAndView("genre-not-found");
-        modelAndView.addObject("genreName", ex.getName());
+        ModelAndView modelAndView = new ModelAndView("object-not-found");
+        modelAndView.addObject("title", "Genre not found");
+        modelAndView.addObject("message", String.format("Genre %s not found", ex.getName()));
 
         return modelAndView;
     }

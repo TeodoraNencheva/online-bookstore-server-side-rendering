@@ -131,8 +131,9 @@ public class AuthorController {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler({AuthorNotFoundException.class})
     public ModelAndView onAuthorNotFound(AuthorNotFoundException ex) {
-        ModelAndView modelAndView = new ModelAndView("author-not-found");
-        modelAndView.addObject("authorId", ex.getId());
+        ModelAndView modelAndView = new ModelAndView("object-not-found");
+        modelAndView.addObject("title", "Author not found");
+        modelAndView.addObject("message", String.format("Author with id %s not found", ex.getId()));
 
         return modelAndView;
     }

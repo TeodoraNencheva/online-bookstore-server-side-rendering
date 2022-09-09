@@ -20,14 +20,16 @@ public class TestDataUtils {
     private BookRepository bookRepository;
     private GenreRepository genreRepository;
     private OrderRepository orderRepository;
+    private SecureTokenRepository secureTokenRepository;
 
-    public TestDataUtils(UserRepository userRepository, UserRoleRepository userRoleRepository, AuthorRepository authorRepository, BookRepository bookRepository, GenreRepository genreRepository, OrderRepository orderRepository) {
+    public TestDataUtils(UserRepository userRepository, UserRoleRepository userRoleRepository, AuthorRepository authorRepository, BookRepository bookRepository, GenreRepository genreRepository, OrderRepository orderRepository, SecureTokenRepository secureTokenRepository) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
         this.genreRepository = genreRepository;
         this.orderRepository = orderRepository;
+        this.secureTokenRepository = secureTokenRepository;
     }
 
     public void initRoles() {
@@ -100,6 +102,7 @@ public class TestDataUtils {
 
     public void cleanUpDatabase() {
         orderRepository.deleteAll();
+        secureTokenRepository.deleteAll();
         userRepository.deleteAll();
         userRoleRepository.deleteAll();
         bookRepository.deleteAll();

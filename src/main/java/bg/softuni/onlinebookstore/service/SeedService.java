@@ -34,4 +34,15 @@ public class SeedService {
         admin.addRole(adminRole);
         this.userRepository.save(admin);
     }
+
+    @Transactional
+    public void addUsers() {
+        UserRoleEntity userRole = this.userRoleRepository.findByName(UserRoleEnum.USER).get();
+        UserEntity user1 = this.userRepository.findById(2L).get();
+        UserEntity user2 = this.userRepository.findById(3L).get();
+        user1.addRole(userRole);
+        user2.addRole(userRole);
+        userRepository.save(user1);
+        userRepository.save(user2);
+    }
 }

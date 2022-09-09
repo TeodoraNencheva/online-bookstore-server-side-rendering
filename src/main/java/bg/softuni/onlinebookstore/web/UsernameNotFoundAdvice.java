@@ -13,8 +13,9 @@ public class UsernameNotFoundAdvice {
     @ExceptionHandler({UsernameNotFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ModelAndView onUsernameNotFound(UsernameNotFoundException ex) {
-        ModelAndView modelAndView = new ModelAndView("username-not-found");
-        modelAndView.addObject("username", ex.getMessage());
+        ModelAndView modelAndView = new ModelAndView("object-not-found");
+        modelAndView.addObject("title", "User not found");
+        modelAndView.addObject("message", String.format("User with username %s not found", ex.getMessage()));
 
         return modelAndView;
     }

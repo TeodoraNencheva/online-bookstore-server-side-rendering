@@ -101,7 +101,8 @@ public class OrderControllerIT {
     void testWrongOrderId_Throws() throws Exception {
         mockMvc.perform(get("/orders/100/details"))
                 .andExpect(status().isNotFound())
-                .andExpect(view().name("order-not-found"))
-                .andExpect(model().attributeExists("orderId"));
+                .andExpect(view().name("object-not-found"))
+                .andExpect(model().attributeExists("title"))
+                .andExpect(model().attributeExists("message"));
     }
 }

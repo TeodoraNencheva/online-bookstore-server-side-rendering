@@ -13,7 +13,15 @@ spring:
           facebook:
             clientId:
             clientSecret:
+  mail:
+    host: 127.0.0.1
+    port: 3025
+    username: test
+    password: topsecret
 
 secure:
   token:
     validity: 2
+site:
+  base:
+    url: http://localhost:8080
