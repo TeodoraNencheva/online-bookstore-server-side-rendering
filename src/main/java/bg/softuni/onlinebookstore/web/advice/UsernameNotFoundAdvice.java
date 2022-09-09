@@ -1,4 +1,4 @@
-package bg.softuni.onlinebookstore.web;
+package bg.softuni.onlinebookstore.web.advice;
 
 import bg.softuni.onlinebookstore.model.error.GenreNotFoundException;
 import org.springframework.http.HttpStatus;

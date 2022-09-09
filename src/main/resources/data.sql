@@ -1,5 +1,5 @@
 INSERT INTO users (first_name, last_name, email, password, account_verified)
-VALUES ('Teodora', 'Nencheva', 'Teodora.n@gmail.com', '8872e57546cbfea60f01b1270370d1337adc11b933ca26d6e7d4dc4619c7c51c239d529bc044b6b4', true),
+VALUES ('Admin', 'Adminov', 'admin@example.com', '8872e57546cbfea60f01b1270370d1337adc11b933ca26d6e7d4dc4619c7c51c239d529bc044b6b4', true),
        ('User', 'Userov', 'user@example.com', '8872e57546cbfea60f01b1270370d1337adc11b933ca26d6e7d4dc4619c7c51c239d529bc044b6b4', true),
        ('User2', 'Userov', 'user2@example.com', '8872e57546cbfea60f01b1270370d1337adc11b933ca26d6e7d4dc4619c7c51c239d529bc044b6b4', true);
 

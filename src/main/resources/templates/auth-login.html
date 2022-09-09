@@ -26,8 +26,8 @@
     </p>
 
     <div class="card-body login-card-body">
-        <div class="alert alert-success" role="alert" th:if="${verifiedAccountMsg != null}">
-            <p th:text="${verifiedAccountMsg}"></p>
+        <div class="alert alert-success" role="alert" th:if="${successMessage != null}">
+            <p th:text="${successMessage}"></p>
         </div>
 
         <div class="alert alert-danger" role="alert" th:if="${tokenError != null}">
@@ -66,6 +66,8 @@
         <p th:if="${bad_credentials}" class="errors alert alert-danger">
             Invalid username or password.
         </p>
+
+        <a th:href="@{/password/reset}" class="text-info">Forgot password?</a>
 
         <div class="row">
             <div class="col col-md-4">

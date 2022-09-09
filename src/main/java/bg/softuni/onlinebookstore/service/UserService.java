@@ -161,7 +161,21 @@ public class UserService {
     }
 
     public UserEntity getUser(UserDetails userDetails) {
-        return userRepository.findByEmail(userDetails.getUsername()).get();
+        Optional<UserEntity> userOpt = userRepository.findByEmail(userDetails.getUsername());
+        if (userOpt.isEmpty() || !userOpt.get().isAccountVerified()) {
+            throw new UsernameNotFoundException(userDetails.getUsername());
+        }
+
+        return userOpt.get();
+    }
+
+    public UserEntity getUser(String email) {
+        Optional<UserEntity> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty() || !userOpt.get().isAccountVerified()) {
+            throw new UsernameNotFoundException(email);
+        }
+
+        return userOpt.get();
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

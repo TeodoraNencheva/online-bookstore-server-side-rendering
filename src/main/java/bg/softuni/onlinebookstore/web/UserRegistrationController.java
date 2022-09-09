@@ -75,7 +75,7 @@ public class UserRegistrationController {
             return REDIRECT_LOGIN;
         }
 
-        redirectAttributes.addFlashAttribute("verifiedAccountMsg",
+        redirectAttributes.addFlashAttribute("successMessage",
                 messageSource.getMessage("user.registration.verification.success",
                         null,
                         LocaleContextHolder.getLocale()));
