@@ -13,8 +13,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -145,7 +144,7 @@ public class BookControllerIT {
     @WithMockUser(authorities = "ROLE_ADMIN")
     @Test
     void testUpdateBookAdminWorks() throws Exception {
-        mockMvc.perform(post("/books/update/{id}", testBook.getId())
+        mockMvc.perform(put("/books/{id}", testBook.getId())
                         .param("title", "Pod Igoto")
                         .param("authorId", testBook.getAuthor().getId().toString())
                         .param("genreId", testBook.getGenre().getId().toString())
