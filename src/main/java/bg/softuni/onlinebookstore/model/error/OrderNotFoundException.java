@@ -3,15 +3,17 @@ package bg.softuni.onlinebookstore.model.error;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.UUID;
+
 @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Order not found")
 public class OrderNotFoundException extends RuntimeException {
-    private Long id;
+    private UUID id;
 
-    public OrderNotFoundException(Long id) {
+    public OrderNotFoundException(UUID id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 }

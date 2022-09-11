@@ -15,6 +15,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -99,7 +101,12 @@ public class OrderControllerIT {
     @WithUserDetails(value = "user2@example.com", userDetailsServiceBeanName = "testUserDataService")
     @Test
     void testWrongOrderId_Throws() throws Exception {
-        mockMvc.perform(get("/orders/100/details"))
+        UUID uuid = UUID.randomUUID();
+        while (uuid == testOrder.getId()) {
+            uuid = UUID.randomUUID();
+        }
+
+        mockMvc.perform(get("/orders/{uuid}/details", uuid))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("object-not-found"))
                 .andExpect(model().attributeExists("title"))

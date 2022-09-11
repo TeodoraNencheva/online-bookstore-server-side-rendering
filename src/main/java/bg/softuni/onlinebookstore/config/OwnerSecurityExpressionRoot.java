@@ -5,6 +5,8 @@ import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.core.Authentication;
 
+import java.util.UUID;
+
 public class OwnerSecurityExpressionRoot extends SecurityExpressionRoot
         implements MethodSecurityExpressionOperations {
 
@@ -20,14 +22,14 @@ public class OwnerSecurityExpressionRoot extends SecurityExpressionRoot
         this.orderService = orderService;
     }
 
-    public boolean isOwner(Long id) {
+    public boolean isOwner(UUID id) {
         if (authentication.getPrincipal() == null) {
             return false;
         }
 
         String username = authentication.getName();
 
-        return orderService.isOwner(username, id) || hasRole("ADMIN");
+        return orderService.isOwner(username, id) || hasAuthority("ROLE_ADMIN");
     }
 
     @Override

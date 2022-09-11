@@ -1,12 +1,25 @@
 package bg.softuni.onlinebookstore.model.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
-public class OrderEntity extends BaseEntity {
+public class OrderEntity {
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Type(type = "uuid-char")
+    private UUID id;
+
     @ManyToOne(optional = false)
     private UserEntity owner;
 
@@ -26,6 +39,14 @@ public class OrderEntity extends BaseEntity {
         this.owner = owner;
         setItems(items);
         this.isProcessed = false;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public UserEntity getOwner() {

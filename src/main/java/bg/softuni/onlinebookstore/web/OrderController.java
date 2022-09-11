@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.UUID;
+
 @Controller
 @RequestMapping("/orders")
 public class OrderController {
@@ -40,7 +42,7 @@ public class OrderController {
     //@PreAuthorize("@orderService.isOwner(#principal.username, #id) or #principal.admin")
     @PreAuthorize("isOwner(#id)")
     @GetMapping("/{id}/details")
-    public String getOrderDetails(@PathVariable("id") Long id, Model model,
+    public String getOrderDetails(@PathVariable("id") UUID id, Model model,
                                   @AuthenticationPrincipal BookstoreUserDetails principal) {
         model.addAttribute("order", orderService.getOrder(id));
         model.addAttribute("items", orderService.getOrderItems(id));
@@ -48,7 +50,7 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/confirm")
-    public String confirmOrder(@PathVariable("id") Long id) {
+    public String confirmOrder(@PathVariable("id") UUID id) {
         orderService.confirmOrder(id);
         return "redirect:/orders/unprocessed";
     }

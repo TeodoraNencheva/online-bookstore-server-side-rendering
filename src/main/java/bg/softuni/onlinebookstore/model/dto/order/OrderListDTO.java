@@ -1,16 +1,18 @@
 package bg.softuni.onlinebookstore.model.dto.order;
 
+import java.util.UUID;
+
 public class OrderListDTO {
-    private Long id;
+    private UUID id;
 
     public OrderListDTO() {
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 }

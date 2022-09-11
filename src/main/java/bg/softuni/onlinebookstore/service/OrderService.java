@@ -65,7 +65,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public OrderEntity getOrder(Long id) {
+    public OrderEntity getOrder(UUID id) {
         Optional<OrderEntity> orderOpt = orderRepository.findById(id);
         if (orderOpt.isEmpty()) {
             throw new OrderNotFoundException(id);
@@ -75,12 +75,12 @@ public class OrderService {
     }
 
     @Transactional
-    public Map<BookEntity, Integer> getOrderItems(Long id) {
+    public Map<BookEntity, Integer> getOrderItems(UUID id) {
         return getOrder(id).getItems();
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void confirmOrder(Long id) {
+    public void confirmOrder(UUID id) {
         OrderEntity order = getOrder(id);
         order.setProcessed(true);
         orderRepository.save(order);
@@ -97,7 +97,7 @@ public class OrderService {
         newOrdersCount = 0;
     }
 
-    public boolean isOwner(String userName, Long id) {
+    public boolean isOwner(String userName, UUID id) {
         OrderEntity order = getOrder(id);
 
         Optional<UserEntity> userOpt = userRepository.findByEmail(userName);
