@@ -80,6 +80,7 @@ public class BookController {
         model.addAttribute("action", "/books/add");
         model.addAttribute("buttonText", "Add Book");
         model.addAttribute("title", "Add New Book");
+        model.addAttribute("method", "post");
         model.addAttribute("authors", authorService.getAllAuthors());
         model.addAttribute("genres", genreService.getAllGenres());
         return "book-add-or-update";
@@ -112,15 +113,16 @@ public class BookController {
         if (!model.containsAttribute("bookModel")) {
             model.addAttribute("bookModel", bookModel);
         }
-        model.addAttribute("action", "/books/update/" + id);
+        model.addAttribute("action", "/books/" + id);
         model.addAttribute("buttonText", "Update Book");
         model.addAttribute("title", "Update Book");
+        model.addAttribute("method", "put");
         model.addAttribute("authors", authorService.getAllAuthors());
         model.addAttribute("genres", genreService.getAllGenres());
         return "book-add-or-update";
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/{id}")
     public String updateBook(@Valid AddNewBookDTO bookModel,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes,
