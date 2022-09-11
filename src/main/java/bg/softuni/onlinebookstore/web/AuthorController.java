@@ -60,6 +60,7 @@ public class AuthorController {
         model.addAttribute("title", "Add New Author");
         model.addAttribute("action", "/authors/add");
         model.addAttribute("buttonText", "Add Author");
+        model.addAttribute("method", "post");
 
         return "author-add-or-update";
     }
@@ -93,14 +94,15 @@ public class AuthorController {
         }
 
         model.addAttribute("title", "Update Author");
-        model.addAttribute("action", "/authors/update/" + id);
+        model.addAttribute("action", "/authors/" + id);
         model.addAttribute("buttonText", "Update Author");
+        model.addAttribute("method", "put");
 
         return "author-add-or-update";
     }
 
-    @PostMapping("/update/{id}")
-    public String updateBook(@Valid AddNewAuthorDTO authorModel,
+    @PutMapping("/{id}")
+    public String updateAuthor(@Valid AddNewAuthorDTO authorModel,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes,
                              @PathVariable("id") Long id) {

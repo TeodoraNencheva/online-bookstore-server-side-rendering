@@ -19,7 +19,7 @@
 <div class="container">
     <h2 class="text-center text-white" th:text="${title}"></h2>
     <form th:action="@{${action}}"
-          th:method="post"
+          th:method="${method}"
           th:object="${authorModel}"
           class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
         <div class="row">
