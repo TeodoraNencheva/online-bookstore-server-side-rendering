@@ -2,11 +2,14 @@ package bg.softuni.onlinebookstore.web;
 
 import bg.softuni.onlinebookstore.model.dto.book.AddNewBookDTO;
 import bg.softuni.onlinebookstore.model.dto.book.BookDetailsDTO;
+import bg.softuni.onlinebookstore.model.dto.book.BookOverviewDTO;
+import bg.softuni.onlinebookstore.model.dto.search.SearchDTO;
 import bg.softuni.onlinebookstore.model.entity.BookEntity;
 import bg.softuni.onlinebookstore.model.error.BookNotFoundException;
 import bg.softuni.onlinebookstore.service.AuthorService;
 import bg.softuni.onlinebookstore.service.BookService;
 import bg.softuni.onlinebookstore.service.GenreService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -19,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/books")
@@ -150,5 +154,37 @@ public class BookController {
 
         bookService.deleteBook(id);
         return "redirect:/books/all";
+    }
+
+    @GetMapping("/search")
+    public String search(Model model) {
+        model.addAttribute("title", "Search for a book");
+        model.addAttribute("action", "/books/search");
+
+        if (!model.containsAttribute("searchDTO")) {
+            model.addAttribute("searchDTO", new SearchDTO());
+        }
+
+        return "search";
+    }
+
+    @PostMapping("/search")
+    public String search(Model model,
+                         @Valid SearchDTO searchDTO,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("searchDTO", searchDTO);
+            redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.searchDTO",
+                    bindingResult);
+            return "redirect:/books/search";
+        }
+
+        List<BookOverviewDTO> books = bookService.searchBooks(searchDTO);
+        model.addAttribute("books", books);
+
+        return "search";
     }
 }

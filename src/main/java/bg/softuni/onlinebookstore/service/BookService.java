@@ -1,6 +1,7 @@
 package bg.softuni.onlinebookstore.service;
 
 import bg.softuni.onlinebookstore.model.dto.book.*;
+import bg.softuni.onlinebookstore.model.dto.search.SearchDTO;
 import bg.softuni.onlinebookstore.model.entity.AuthorEntity;
 import bg.softuni.onlinebookstore.model.entity.BookEntity;
 import bg.softuni.onlinebookstore.model.entity.GenreEntity;
@@ -10,6 +11,7 @@ import bg.softuni.onlinebookstore.model.error.GenreNotFoundException;
 import bg.softuni.onlinebookstore.model.mapper.BookMapper;
 import bg.softuni.onlinebookstore.repositories.AuthorRepository;
 import bg.softuni.onlinebookstore.repositories.BookRepository;
+import bg.softuni.onlinebookstore.repositories.BookSpecification;
 import bg.softuni.onlinebookstore.repositories.GenreRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -131,5 +133,11 @@ public class BookService {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    public List<BookOverviewDTO> searchBooks(SearchDTO searchDTO) {
+        return this.bookRepository.findAll(new BookSpecification(searchDTO))
+                .stream().map(bookMapper::bookEntityToBookOverviewDTO)
+                .collect(Collectors.toList());
     }
 }

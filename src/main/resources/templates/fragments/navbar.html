@@ -43,6 +43,19 @@
                        th:href="@{/authors}">Authors</a>
                 </li>
 
+                <th:block>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="/" id="search" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Search
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="search">
+                            <a class="dropdown-item" href="/books/search">Books</a>
+                            <a class="dropdown-item" href="/authors/search">Authors</a>
+                        </div>
+                    </li>
+                </th:block>
+
                 <th:block sec:authorize="hasRole('USER')">
                     <li class="nav-item">
                         <a class="nav-link"
