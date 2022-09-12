@@ -22,8 +22,13 @@ public class BookSpecification implements Specification<BookEntity> {
                                  CriteriaBuilder cb) {
         Predicate p = cb.conjunction();
 
-        p.getExpressions().add(cb.and(cb.like(root.get("title"),
-                "%" + searchDTO.getSearchText() + "%")));
+        Predicate titlePredicate = cb.like(root.get("title"),
+                "%" + searchDTO.getSearchText() + "%");
+
+        Predicate summaryPredicate = cb.like(root.get("summary"),
+                "%" + searchDTO.getSearchText() + "%");
+
+        p.getExpressions().add(cb.or(titlePredicate, summaryPredicate));
 
         return p;
     }
