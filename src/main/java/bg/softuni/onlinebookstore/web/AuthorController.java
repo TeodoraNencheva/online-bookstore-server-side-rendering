@@ -2,8 +2,6 @@ package bg.softuni.onlinebookstore.web;
 
 import bg.softuni.onlinebookstore.model.dto.author.AddNewAuthorDTO;
 import bg.softuni.onlinebookstore.model.dto.author.AuthorDetailsDTO;
-import bg.softuni.onlinebookstore.model.dto.author.AuthorOverviewDTO;
-import bg.softuni.onlinebookstore.model.dto.book.BookOverviewDTO;
 import bg.softuni.onlinebookstore.model.dto.search.SearchDTO;
 import bg.softuni.onlinebookstore.model.entity.AuthorEntity;
 import bg.softuni.onlinebookstore.model.error.AuthorNotFoundException;
@@ -20,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/authors")
@@ -36,7 +33,6 @@ public class AuthorController {
                                 @PageableDefault(
                                         sort = "lastName",
                                         direction = Sort.Direction.ASC,
-                                        page = 0,
                                         size = 4) Pageable pageable) {
         model.addAttribute("authors", authorService.getAllAuthors(pageable));
 
@@ -145,7 +141,9 @@ public class AuthorController {
     }
 
     @GetMapping("/search")
-    public String search(Model model) {
+    public String search(Model model,
+                         @ModelAttribute SearchDTO searchDTO) {
+
         model.addAttribute("title", "Search for an author");
         model.addAttribute("action", "/authors/search");
 
@@ -153,25 +151,9 @@ public class AuthorController {
             model.addAttribute("searchDTO", new SearchDTO());
         }
 
-        return "search";
-    }
-
-    @PostMapping("/search")
-    public String search(Model model,
-                         @Valid SearchDTO searchDTO,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes) {
-
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("searchDTO", searchDTO);
-            redirectAttributes.addFlashAttribute(
-                    "org.springframework.validation.BindingResult.searchDTO",
-                    bindingResult);
-            return "redirect:/authors/search";
+        if (searchDTO.getSearchText() != null && !searchDTO.getSearchText().trim().isEmpty()) {
+            model.addAttribute("authors", authorService.searchAuthors(searchDTO));
         }
-
-        List<AuthorOverviewDTO> authors = authorService.searchAuthors(searchDTO);
-        model.addAttribute("authors", authors);
 
         return "search";
     }

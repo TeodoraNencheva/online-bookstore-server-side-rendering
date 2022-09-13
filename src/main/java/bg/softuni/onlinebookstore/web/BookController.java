@@ -2,27 +2,22 @@ package bg.softuni.onlinebookstore.web;
 
 import bg.softuni.onlinebookstore.model.dto.book.AddNewBookDTO;
 import bg.softuni.onlinebookstore.model.dto.book.BookDetailsDTO;
-import bg.softuni.onlinebookstore.model.dto.book.BookOverviewDTO;
 import bg.softuni.onlinebookstore.model.dto.search.SearchDTO;
 import bg.softuni.onlinebookstore.model.entity.BookEntity;
 import bg.softuni.onlinebookstore.model.error.BookNotFoundException;
 import bg.softuni.onlinebookstore.service.AuthorService;
 import bg.softuni.onlinebookstore.service.BookService;
 import bg.softuni.onlinebookstore.service.GenreService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/books")
@@ -157,7 +152,8 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public String search(Model model) {
+    public String search(Model model,
+                         @ModelAttribute SearchDTO searchDTO) {
         model.addAttribute("title", "Search for a book");
         model.addAttribute("action", "/books/search");
 
@@ -165,25 +161,9 @@ public class BookController {
             model.addAttribute("searchDTO", new SearchDTO());
         }
 
-        return "search";
-    }
-
-    @PostMapping("/search")
-    public String search(Model model,
-                         @Valid SearchDTO searchDTO,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes) {
-
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("searchDTO", searchDTO);
-            redirectAttributes.addFlashAttribute(
-                    "org.springframework.validation.BindingResult.searchDTO",
-                    bindingResult);
-            return "redirect:/books/search";
+        if (searchDTO.getSearchText() != null && !searchDTO.getSearchText().trim().isEmpty()) {
+            model.addAttribute("books", bookService.searchBooks(searchDTO));
         }
-
-        List<BookOverviewDTO> books = bookService.searchBooks(searchDTO);
-        model.addAttribute("books", books);
 
         return "search";
     }
