@@ -4,10 +4,14 @@ import bg.softuni.onlinebookstore.model.dto.author.AddNewAuthorDTO;
 import bg.softuni.onlinebookstore.model.dto.author.AuthorDetailsDTO;
 import bg.softuni.onlinebookstore.model.dto.author.AuthorNameDTO;
 import bg.softuni.onlinebookstore.model.dto.author.AuthorOverviewDTO;
+import bg.softuni.onlinebookstore.model.dto.book.BookOverviewDTO;
+import bg.softuni.onlinebookstore.model.dto.search.SearchDTO;
 import bg.softuni.onlinebookstore.model.entity.AuthorEntity;
 import bg.softuni.onlinebookstore.model.mapper.AuthorMapper;
 import bg.softuni.onlinebookstore.repositories.AuthorRepository;
+import bg.softuni.onlinebookstore.repositories.AuthorSpecification;
 import bg.softuni.onlinebookstore.repositories.BookRepository;
+import bg.softuni.onlinebookstore.repositories.BookSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -84,5 +88,11 @@ public class AuthorService {
     public void deleteAuthor(Long id) {
         bookRepository.deleteAllByAuthor_Id(id);
         authorRepository.deleteById(id);
+    }
+
+    public List<AuthorOverviewDTO> searchAuthors(SearchDTO searchDTO) {
+        return this.authorRepository.findAll(new AuthorSpecification(searchDTO))
+                .stream().map(authorMapper::authorEntityToAuthorOverviewDTO)
+                .collect(Collectors.toList());
     }
 }

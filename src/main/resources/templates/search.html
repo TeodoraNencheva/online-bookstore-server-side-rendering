@@ -46,28 +46,51 @@
             </div>
         </div>
     </form>
+</div>
 
-    <div class="container-fluid" th:if="${books}">
-        <h2 class="text-center text-white mt-5" th:if="${books.size == 0}">No books meeting the criteria</h2>
-        <div class="offers row mx-auto d-flex flex-row justify-content-center">
-            <div th:each="book : ${books}"
-                 th:object="${book}" class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">
-                <div class="card-img-top-wrapper">
-                    <img class="card-img-top" th:src="*{imageUrl}" alt="Book image">
-                </div>
-                <ul class="offer-details list-group list-group-flush">
-                    <li class="list-group-item">
-                        <div class="card-text"><span><th:block th:text="*{title}"></th:block> </span></div>
-                        <div class="card-text"><span><a th:href="@{/authors/{authorId}(authorId=*{author.id})}" th:text="*{author.fullName}"></a></span></div>
-                        <div class="card-text"><span>• Genre: <a th:href="@{/books/{genre}(genre=*{genre})}" th:text="*{genre}"></a></span></div>
-                    </li>
-                </ul>
-                <div class="card-body">
-                    <a class="card-link" th:href="@{/books/{bookId}/details(bookId=*{id})}">Details</a>
-                </div>
+<div class="container-fluid" th:if="${books}">
+    <h2 class="text-center text-white mt-5" th:if="${books.size == 0}">No books meeting the criteria</h2>
+    <div class="offers row mx-auto d-flex flex-row justify-content-center">
+        <div th:each="book : ${books}"
+             th:object="${book}" class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">
+            <div class="card-img-top-wrapper">
+                <img class="card-img-top" th:src="*{imageUrl}" alt="Book image">
+            </div>
+            <ul class="offer-details list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="card-text"><span><th:block th:text="*{title}"></th:block> </span></div>
+                    <div class="card-text"><span><a th:href="@{/authors/{authorId}(authorId=*{author.id})}"
+                                                    th:text="*{author.fullName}"></a></span></div>
+                    <div class="card-text"><span>• Genre: <a th:href="@{/books/{genre}(genre=*{genre})}"
+                                                             th:text="*{genre}"></a></span></div>
+                </li>
+            </ul>
+            <div class="card-body">
+                <a class="card-link" th:href="@{/books/{bookId}/details(bookId=*{id})}">Details</a>
             </div>
         </div>
     </div>
+</div>
+
+<div class="container-fluid" th:if="${authors}">
+    <h2 class="text-center text-white mt-5" th:if="${authors.size == 0}">No authors meeting the criteria</h2>
+    <div class="offers row mx-auto d-flex flex-row justify-content-center">
+        <div th:each="author : ${authors}"
+             th:object="${author}" class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">
+            <div class="card-img-top-wrapper">
+                <img class="card-img-top" th:src="*{photoUrl}" alt="Author image">
+            </div>
+            <ul class="offer-details list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="card-text"><span><th:block th:text="*{fullName}"></th:block> </span></div>
+                </li>
+            </ul>
+            <div class="card-body">
+                <a class="card-link" th:href="@{/authors/{authorId}/(authorId=*{id})}">Details</a>
+            </div>
+        </div>
+    </div>
+</div>
 <div>
     <footer></footer>
 </div>

@@ -2,6 +2,9 @@ package bg.softuni.onlinebookstore.web;
 
 import bg.softuni.onlinebookstore.model.dto.author.AddNewAuthorDTO;
 import bg.softuni.onlinebookstore.model.dto.author.AuthorDetailsDTO;
+import bg.softuni.onlinebookstore.model.dto.author.AuthorOverviewDTO;
+import bg.softuni.onlinebookstore.model.dto.book.BookOverviewDTO;
+import bg.softuni.onlinebookstore.model.dto.search.SearchDTO;
 import bg.softuni.onlinebookstore.model.entity.AuthorEntity;
 import bg.softuni.onlinebookstore.model.error.AuthorNotFoundException;
 import bg.softuni.onlinebookstore.service.AuthorService;
@@ -17,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/authors")
@@ -138,5 +142,37 @@ public class AuthorController {
         modelAndView.addObject("message", String.format("Author with id %s not found", ex.getId()));
 
         return modelAndView;
+    }
+
+    @GetMapping("/search")
+    public String search(Model model) {
+        model.addAttribute("title", "Search for an author");
+        model.addAttribute("action", "/authors/search");
+
+        if (!model.containsAttribute("searchDTO")) {
+            model.addAttribute("searchDTO", new SearchDTO());
+        }
+
+        return "search";
+    }
+
+    @PostMapping("/search")
+    public String search(Model model,
+                         @Valid SearchDTO searchDTO,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("searchDTO", searchDTO);
+            redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.searchDTO",
+                    bindingResult);
+            return "redirect:/authors/search";
+        }
+
+        List<AuthorOverviewDTO> authors = authorService.searchAuthors(searchDTO);
+        model.addAttribute("authors", authors);
+
+        return "search";
     }
 }
