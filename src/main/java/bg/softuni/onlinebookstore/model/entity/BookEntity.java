@@ -21,12 +21,11 @@ public class BookEntity extends BaseEntity {
     @Column(nullable = false)
     private String yearOfPublication;
 
-    //@Column(nullable = false, columnDefinition = "text")
     @Column(nullable = false, length = 1000)
     private String summary;
 
-    @Column(nullable = false)
-    private String imageUrl;
+    @OneToOne
+    private PictureEntity picture;
 
     @Column(nullable = false)
     private BigDecimal price;
@@ -34,23 +33,24 @@ public class BookEntity extends BaseEntity {
     public BookEntity() {
     }
 
-    public BookEntity(String title, AuthorEntity author, GenreEntity genre, String yearOfPublication, String summary, String imageUrl, BigDecimal price) {
+    public BookEntity(String title, AuthorEntity author, GenreEntity genre, String yearOfPublication, String summary, PictureEntity picture, BigDecimal price) {
         this.title = title;
         this.author = author;
         this.genre = genre;
         this.yearOfPublication = yearOfPublication;
         this.summary = summary;
-        this.imageUrl = imageUrl;
+        this.picture = picture;
         this.price = price;
     }
 
-    public BookEntity(AddNewBookDTO bookDTO, AuthorEntity author, GenreEntity genre) {
+    public BookEntity(AddNewBookDTO bookDTO, AuthorEntity author, GenreEntity genre,
+                      PictureEntity picture) {
         this.title = bookDTO.getTitle();
         this.author = author;
         this.genre = genre;
         this.yearOfPublication = bookDTO.getYearOfPublication();
         this.summary = bookDTO.getSummary();
-        this.imageUrl = bookDTO.getImageUrl();
+        this.picture = picture;
         this.price = bookDTO.getPrice();
     }
 
@@ -94,12 +94,12 @@ public class BookEntity extends BaseEntity {
         this.summary = summary;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public PictureEntity getPicture() {
+        return picture;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setPicture(PictureEntity picture) {
+        this.picture = picture;
     }
 
     public BigDecimal getPrice() {

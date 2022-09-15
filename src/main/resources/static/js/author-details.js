@@ -5,7 +5,7 @@ const booksSection = document.getElementById("booksSection");
 function getBookOverview(book) {
     return `<div class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">
                 <div class="card-img-top-wrapper">
-                    <img class="card-img-top" src="${book.imageUrl}" alt="Book image">
+                    <img class="card-img-top" src="${book.picture}" alt="Book image">
                 </div>
                 <ul class="offer-details list-group list-group-flush">
                     <li class="list-group-item">
@@ -33,7 +33,7 @@ async function loadBooksByAuthor(event) {
             }
 
             if (data.length == 0) {
-                booksSection.innerHTML += `<h2 class="text-center text-white mt-5">No books of this author available</h2>`
+                booksSection.innerHTML = `<h2 class="text-center text-white mt-5">No books of this author available</h2>`
             }
         });
 }

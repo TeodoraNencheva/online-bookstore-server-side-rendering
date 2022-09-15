@@ -11,17 +11,17 @@ public class BookOverviewDTO {
 
     private String genre;
 
-    private String imageUrl;
+    private String picture;
 
     public BookOverviewDTO() {
     }
 
-    public BookOverviewDTO(Long id, String title, AuthorEntity author, String genre, String imageUrl) {
+    public BookOverviewDTO(Long id, String title, AuthorEntity author, String genre, String picture) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.genre = genre;
-        this.imageUrl = imageUrl;
+        this.picture = picture;
     }
 
     public Long getId() {
@@ -56,11 +56,11 @@ public class BookOverviewDTO {
         this.genre = genre;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

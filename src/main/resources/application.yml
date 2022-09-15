@@ -18,18 +18,22 @@ spring:
       client:
         registration:
           facebook:
-            clientId:
-            clientSecret:
+            clientId: 625004692465831
+            clientSecret: ${FACEBOOK_CLIENT_SECRET}
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   sql:
     init:
       mode: always
 
-      #SMTP configuration
+  #SMTP configuration
   mail:
     host: smtp.gmail.com
     port: 587
-    username:
-    password:
+    username: teodora.nencheva1@gmail.com
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -52,7 +56,13 @@ springdoc:
 #secure token configuration
 secure:
   token:
-    validity: 2
+    validity: 24
 site:
   base:
     url: http://localhost:8080
+
+#cloudinary properties
+cloudinary:
+  api-key: 468519295473947
+  api-secret: ${CLOUDINARY_API_SECRET}
+  cloud-name: teodoran

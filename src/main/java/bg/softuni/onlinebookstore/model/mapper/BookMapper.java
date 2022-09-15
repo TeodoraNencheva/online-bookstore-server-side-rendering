@@ -13,13 +13,11 @@ import java.awt.print.Book;
 @Mapper(componentModel = "spring")
 public interface BookMapper {
     @Mapping(source = "genre.name", target = "genre")
+    @Mapping(source = "picture.url", target = "picture")
     BookDetailsDTO bookEntityToBookDetailsDTO(BookEntity bookEntity);
 
     @Mapping(source = "genre.name", target = "genre")
+    @Mapping(source = "picture.url", target = "picture")
     BookOverviewDTO bookEntityToBookOverviewDTO(BookEntity bookEntity);
-
-    @Mapping(source = "author.id", target = "authorId")
-    @Mapping(source = "genre.id", target = "genreId")
-    AddNewBookDTO bookEntityToAddNewBookDTO(BookEntity bookEntity);
 }
 

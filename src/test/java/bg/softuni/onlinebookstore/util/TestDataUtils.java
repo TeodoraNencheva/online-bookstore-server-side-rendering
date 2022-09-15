@@ -80,7 +80,7 @@ public class TestDataUtils {
     }
 
     public BookEntity createTestBook(AuthorEntity author, GenreEntity genre) {
-        BookEntity book = new BookEntity("title", author, genre, "year", "summary", "image url", new BigDecimal(10));
+        BookEntity book = new BookEntity("title", author, genre, "year", "summary", null, new BigDecimal(10));
         return bookRepository.save(book);
     }
 

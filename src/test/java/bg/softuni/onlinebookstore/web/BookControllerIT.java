@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
@@ -80,7 +82,6 @@ public class BookControllerIT {
                         .param("genreId", "1L")
                         .param("yearOfPublication", "1894")
                         .param("summary", "some summary")
-                        .param("imageUrl", "image URL")
                         .param("price", "20"))
                 .andExpect(status().isForbidden());
     }
@@ -94,7 +95,6 @@ public class BookControllerIT {
                         .param("genreId", testBook.getGenre().getId().toString())
                         .param("yearOfPublication", "1894")
                         .param("summary", "some summary")
-                        .param("imageUrl", "image URL")
                         .param("price", "20")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
@@ -109,7 +109,7 @@ public class BookControllerIT {
                         .param("genreId", testBook.getGenre().getId().toString())
                         .param("yearOfPublication", "1894")
                         .param("summary", "some summary")
-                        .param("imageUrl", "image URL")
+                        .param("picture", "image URL")
                         .param("price", "20")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
@@ -136,7 +136,7 @@ public class BookControllerIT {
                         .param("genreId", "1L")
                         .param("yearOfPublication", "1894")
                         .param("summary", "some summary")
-                        .param("imageUrl", "image URL")
+                        .param("picture", "image URL")
                         .param("price", "20"))
                 .andExpect(status().isForbidden());
     }
@@ -150,7 +150,6 @@ public class BookControllerIT {
                         .param("genreId", testBook.getGenre().getId().toString())
                         .param("yearOfPublication", "1894")
                         .param("summary", "some summary")
-                        .param("imageUrl", "image URL")
                         .param("price", "20")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())

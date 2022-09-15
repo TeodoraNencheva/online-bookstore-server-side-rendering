@@ -11,8 +11,12 @@ spring:
       client:
         registration:
           facebook:
-            clientId:
-            clientSecret:
+            clientId: 625004692465831
+            clientSecret: ${FACEBOOK_CLIENT_SECRET}
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   mail:
     host: 127.0.0.1
     port: 3025
@@ -21,7 +25,12 @@ spring:
 
 secure:
   token:
-    validity: 2
+    validity: 24
 site:
   base:
     url: http://localhost:8080
+
+cloudinary:
+  api-key: 468519295473947
+  api-secret: ${CLOUDINARY_API_SECRET}
+  cloud-name: teodoran

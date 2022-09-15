@@ -5,19 +5,18 @@ import bg.softuni.onlinebookstore.model.dto.search.SearchDTO;
 import bg.softuni.onlinebookstore.model.entity.AuthorEntity;
 import bg.softuni.onlinebookstore.model.entity.BookEntity;
 import bg.softuni.onlinebookstore.model.entity.GenreEntity;
+import bg.softuni.onlinebookstore.model.entity.PictureEntity;
 import bg.softuni.onlinebookstore.model.error.AuthorNotFoundException;
 import bg.softuni.onlinebookstore.model.error.BookNotFoundException;
 import bg.softuni.onlinebookstore.model.error.GenreNotFoundException;
 import bg.softuni.onlinebookstore.model.mapper.BookMapper;
-import bg.softuni.onlinebookstore.repositories.AuthorRepository;
-import bg.softuni.onlinebookstore.repositories.BookRepository;
-import bg.softuni.onlinebookstore.repositories.BookSpecification;
-import bg.softuni.onlinebookstore.repositories.GenreRepository;
+import bg.softuni.onlinebookstore.repositories.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -29,12 +28,17 @@ public class BookService {
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
     private final BookMapper bookMapper;
+    private final CloudinaryService cloudinaryService;
+    private final PictureRepository pictureRepository;
 
-    public BookService(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository, BookMapper bookMapper) {
+    public BookService(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository, BookMapper bookMapper, CloudinaryService cloudinaryService, PictureRepository pictureRepository) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.genreRepository = genreRepository;
         this.bookMapper = bookMapper;
+        this.cloudinaryService = cloudinaryService;
+
+        this.pictureRepository = pictureRepository;
     }
 
     public BookDetailsDTO getBookDetails(Long id) {
@@ -92,11 +96,19 @@ public class BookService {
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public BookEntity addNewBook(AddNewBookDTO bookModel) {
+    public BookEntity addNewBook(AddNewBookDTO bookModel) throws IOException {
         AuthorEntity author = authorRepository.findById(bookModel.getAuthorId()).get();
         GenreEntity genre = genreRepository.findById(bookModel.getGenreId()).get();
-        BookEntity newBook = new BookEntity(bookModel, author, genre);
-        return bookRepository.save(newBook);
+
+        if (bookModel.getPicture() != null && !bookModel.getPicture().getOriginalFilename().isEmpty()) {
+            PictureEntity picture = new PictureEntity(cloudinaryService.upload(bookModel.getPicture()));
+            pictureRepository.save(picture);
+            BookEntity newBook = new BookEntity(bookModel, author, genre, picture);
+            return bookRepository.save(newBook);
+        } else {
+            BookEntity newBook = new BookEntity(bookModel, author, genre, null);
+            return bookRepository.save(newBook);
+        }
     }
 
     public AddNewBookDTO getBookById(Long id) {
@@ -106,11 +118,22 @@ public class BookService {
         }
 
         BookEntity book = bookOpt.get();
-        return bookMapper.bookEntityToAddNewBookDTO(book);
+        return bookEntityToAddNewBookDTO(book);
+    }
+
+    private AddNewBookDTO bookEntityToAddNewBookDTO(BookEntity book) {
+        AddNewBookDTO result = new AddNewBookDTO();
+        result.setTitle(book.getTitle());
+        result.setAuthorId(book.getAuthor().getId());
+        result.setGenreId(book.getGenre().getId());
+        result.setYearOfPublication(book.getYearOfPublication());
+        result.setSummary(book.getSummary());
+        result.setPrice(book.getPrice());
+        return result;
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public BookEntity updateBook(AddNewBookDTO bookModel, Long id) {
+    public BookEntity updateBook(AddNewBookDTO bookModel, Long id) throws IOException {
         Optional<BookEntity> bookOpt = bookRepository.findById(id);
         if (bookOpt.isEmpty()) {
             return null;
@@ -125,7 +148,13 @@ public class BookService {
         book.setGenre(genre);
         book.setYearOfPublication(bookModel.getYearOfPublication());
         book.setSummary(bookModel.getSummary());
-        book.setImageUrl(bookModel.getImageUrl());
+
+        if (bookModel.getPicture() != null && !bookModel.getPicture().getOriginalFilename().isEmpty()) {
+            PictureEntity picture = new PictureEntity(cloudinaryService.upload(bookModel.getPicture()));
+            pictureRepository.save(picture);
+            book.setPicture(picture);
+        }
+
         book.setPrice(bookModel.getPrice());
         return bookRepository.save(book);
     }

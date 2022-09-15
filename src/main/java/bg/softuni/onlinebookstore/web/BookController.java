@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/books")
@@ -88,7 +89,7 @@ public class BookController {
     @PostMapping("/add")
     public String addBook(@Valid AddNewBookDTO bookModel,
                           BindingResult bindingResult,
-                          RedirectAttributes redirectAttributes) {
+                          RedirectAttributes redirectAttributes) throws IOException {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("bookModel", bookModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.bookModel",
@@ -125,7 +126,7 @@ public class BookController {
     public String updateBook(@Valid AddNewBookDTO bookModel,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes,
-                             @PathVariable("id") Long id) {
+                             @PathVariable("id") Long id) throws IOException {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("bookModel", bookModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.bookModel",

@@ -17,7 +17,7 @@ public class BookDetailsDTO {
 
     private String summary;
 
-    private String imageUrl;
+    private String picture;
 
     private BigDecimal price;
 
@@ -72,12 +72,12 @@ public class BookDetailsDTO {
         this.summary = summary;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     public BigDecimal getPrice() {

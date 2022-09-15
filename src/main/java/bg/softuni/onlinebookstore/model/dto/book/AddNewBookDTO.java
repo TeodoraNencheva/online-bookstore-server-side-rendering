@@ -1,5 +1,7 @@
 package bg.softuni.onlinebookstore.model.dto.book;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -21,8 +23,7 @@ public class AddNewBookDTO {
     @NotEmpty
     private String summary;
 
-    @NotEmpty
-    private String imageUrl;
+    private MultipartFile picture;
 
     @NotNull
     @Positive
@@ -71,12 +72,12 @@ public class AddNewBookDTO {
         this.summary = summary;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public MultipartFile getPicture() {
+        return picture;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setPicture(MultipartFile picture) {
+        this.picture = picture;
     }
 
     public BigDecimal getPrice() {

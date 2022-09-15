@@ -57,12 +57,12 @@ public class BookRestControllerIT {
                 .andExpect(jsonPath("$.[0].title").value("Pod Igoto"))
                 .andExpect(jsonPath("$.[0].author.fullName").value("Ivan Vazov"))
                 .andExpect(jsonPath("$.[0].genre").value("novel"))
-                .andExpect(jsonPath("$.[0].imageUrl").value("image1"))
+                .andExpect(jsonPath("$.[0].picture").value("image1"))
                 .andExpect(jsonPath("$.[1].id").value(2L))
                 .andExpect(jsonPath("$.[1].title").value("Chichovci"))
                 .andExpect(jsonPath("$.[1].author.fullName").value("Ivan Vazov"))
                 .andExpect(jsonPath("$.[1].genre").value("povest"))
-                .andExpect(jsonPath("$.[1].imageUrl").value("image2"));
+                .andExpect(jsonPath("$.[1].picture").value("image2"));
     }
 
     @Test
