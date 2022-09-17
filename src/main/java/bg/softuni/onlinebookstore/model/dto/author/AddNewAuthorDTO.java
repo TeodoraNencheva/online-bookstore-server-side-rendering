@@ -1,5 +1,8 @@
 package bg.softuni.onlinebookstore.model.dto.author;
 
+import bg.softuni.onlinebookstore.model.entity.AuthorEntity;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -13,17 +16,22 @@ public class AddNewAuthorDTO {
     @NotEmpty
     private String biography;
 
-    @NotEmpty
-    private String photoUrl;
+    private MultipartFile picture;
 
     public AddNewAuthorDTO() {
     }
 
-    public AddNewAuthorDTO(String firstName, String lastName, String biography, String photoUrl) {
+    public AddNewAuthorDTO(String firstName, String lastName, String biography, MultipartFile picture) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.biography = biography;
-        this.photoUrl = photoUrl;
+        this.picture = picture;
+    }
+
+    public AddNewAuthorDTO(AuthorEntity author) {
+        this.firstName = author.getFirstName();
+        this.lastName = author.getLastName();
+        this.biography = author.getBiography();
     }
 
     public String getFirstName() {
@@ -50,11 +58,11 @@ public class AddNewAuthorDTO {
         this.biography = biography;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public MultipartFile getPicture() {
+        return picture;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPicture(MultipartFile picture) {
+        this.picture = picture;
     }
 }

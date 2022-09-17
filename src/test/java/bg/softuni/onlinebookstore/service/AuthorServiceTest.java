@@ -5,6 +5,7 @@ import bg.softuni.onlinebookstore.model.entity.AuthorEntity;
 import bg.softuni.onlinebookstore.model.mapper.AuthorMapper;
 import bg.softuni.onlinebookstore.repositories.AuthorRepository;
 import bg.softuni.onlinebookstore.repositories.BookRepository;
+import bg.softuni.onlinebookstore.repositories.PictureRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,11 +28,18 @@ public class AuthorServiceTest {
     @Mock
     private AuthorMapper authorMapper;
 
+    @Mock
+    private PictureRepository pictureRepository;
+
+    @Mock
+    private CloudinaryService cloudinaryService;
+
     private AuthorService toTest;
 
     @BeforeEach
     void setUp() {
-        toTest = new AuthorService(authorRepository, bookRepository, authorMapper);
+        toTest = new AuthorService(authorRepository, bookRepository, authorMapper,
+                pictureRepository, cloudinaryService);
     }
 
     @Test
@@ -41,12 +49,6 @@ public class AuthorServiceTest {
         testAuthorEntity.setFirstName("Test");
         testAuthorEntity.setLastName("Author");
         testAuthorEntity.setBiography("some author biography");
-        testAuthorEntity.setPhotoUrl("photo img ulr");
-
-        when(authorMapper.authorEntityToAddNewAuthorDTO(testAuthorEntity))
-                .thenReturn(new AddNewAuthorDTO(testAuthorEntity.getFirstName(),
-                        testAuthorEntity.getLastName(), testAuthorEntity.getBiography(),
-                        testAuthorEntity.getPhotoUrl()));
 
         when(authorRepository.findById(testAuthorEntity.getId()))
                 .thenReturn(Optional.of(testAuthorEntity));
@@ -56,6 +58,5 @@ public class AuthorServiceTest {
         Assertions.assertEquals(testAuthorEntity.getFirstName(), author.getFirstName());
         Assertions.assertEquals(testAuthorEntity.getLastName(), author.getLastName());
         Assertions.assertEquals(testAuthorEntity.getBiography(), author.getBiography());
-        Assertions.assertEquals(testAuthorEntity.getPhotoUrl(), author.getPhotoUrl());
     }
 }

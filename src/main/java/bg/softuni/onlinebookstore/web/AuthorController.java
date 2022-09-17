@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/authors")
@@ -68,7 +69,7 @@ public class AuthorController {
     @PostMapping("/add")
     public String addAuthor(@Valid AddNewAuthorDTO authorModel,
                             BindingResult bindingResult,
-                            RedirectAttributes redirectAttributes) {
+                            RedirectAttributes redirectAttributes) throws IOException {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("authorModel", authorModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.authorModel",
@@ -105,7 +106,7 @@ public class AuthorController {
     public String updateAuthor(@Valid AddNewAuthorDTO authorModel,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes,
-                             @PathVariable("id") Long id) {
+                             @PathVariable("id") Long id) throws IOException {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("authorModel", authorModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.authorModel",

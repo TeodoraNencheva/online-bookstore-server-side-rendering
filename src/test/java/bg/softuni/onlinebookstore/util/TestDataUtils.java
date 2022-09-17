@@ -14,13 +14,13 @@ import java.util.stream.Collectors;
 
 @Component
 public class TestDataUtils {
-    private UserRepository userRepository;
-    private UserRoleRepository userRoleRepository;
-    private AuthorRepository authorRepository;
-    private BookRepository bookRepository;
-    private GenreRepository genreRepository;
-    private OrderRepository orderRepository;
-    private SecureTokenRepository secureTokenRepository;
+    private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
+    private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
+    private final GenreRepository genreRepository;
+    private final OrderRepository orderRepository;
+    private final SecureTokenRepository secureTokenRepository;
 
     public TestDataUtils(UserRepository userRepository, UserRoleRepository userRoleRepository, AuthorRepository authorRepository, BookRepository bookRepository, GenreRepository genreRepository, OrderRepository orderRepository, SecureTokenRepository secureTokenRepository) {
         this.userRepository = userRepository;
@@ -70,7 +70,6 @@ public class TestDataUtils {
         author.setFirstName("Ivan");
         author.setLastName("Vazov");
         author.setBiography("short biography");
-        author.setPhotoUrl("img url");
         return authorRepository.save(author);
     }
 

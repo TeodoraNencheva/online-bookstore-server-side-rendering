@@ -16,24 +16,28 @@ public class AuthorEntity extends BaseEntity {
     @Column(nullable = false, length = 1000)
     private String biography;
 
-    @Column(nullable = false)
-    private String photoUrl;
+    @OneToOne
+    private PictureEntity picture;
 
     public AuthorEntity() {
     }
 
-    public AuthorEntity(String firstName, String lastName, String biography, String photoUrl) {
+    public AuthorEntity(String firstName, String lastName, String biography, PictureEntity picture) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.biography = biography;
-        this.photoUrl = photoUrl;
+        this.picture = picture;
+    }
+
+    public AuthorEntity(AddNewAuthorDTO authorDTO, PictureEntity picture) {
+        this(authorDTO);
+        this.picture = picture;
     }
 
     public AuthorEntity(AddNewAuthorDTO authorDTO) {
         this.firstName = authorDTO.getFirstName();
         this.lastName = authorDTO.getLastName();
         this.biography = authorDTO.getBiography();
-        this.photoUrl = authorDTO.getPhotoUrl();
     }
 
     public String getFirstName() {
@@ -60,12 +64,12 @@ public class AuthorEntity extends BaseEntity {
         this.biography = biography;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public PictureEntity getPicture() {
+        return picture;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPicture(PictureEntity picture) {
+        this.picture = picture;
     }
 
     public String getFullName() {

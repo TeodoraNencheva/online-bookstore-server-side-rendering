@@ -5,16 +5,16 @@ public class AuthorDetailsDTO {
     private String fullName;
     private String biography;
 
-    private String photoUrl;
+    private String picture;
 
     public AuthorDetailsDTO() {
     }
 
-    public AuthorDetailsDTO(Long id, String fullName, String biography, String photoUrl) {
+    public AuthorDetailsDTO(Long id, String fullName, String biography, String picture) {
         this.id = id;
         this.fullName = fullName;
         this.biography = biography;
-        this.photoUrl = photoUrl;
+        this.picture = picture;
     }
 
     public Long getId() {
@@ -41,11 +41,11 @@ public class AuthorDetailsDTO {
         this.biography = biography;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

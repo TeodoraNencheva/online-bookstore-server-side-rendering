@@ -6,30 +6,37 @@ import bg.softuni.onlinebookstore.model.dto.author.AuthorNameDTO;
 import bg.softuni.onlinebookstore.model.dto.author.AuthorOverviewDTO;
 import bg.softuni.onlinebookstore.model.dto.search.SearchDTO;
 import bg.softuni.onlinebookstore.model.entity.AuthorEntity;
+import bg.softuni.onlinebookstore.model.entity.PictureEntity;
 import bg.softuni.onlinebookstore.model.mapper.AuthorMapper;
 import bg.softuni.onlinebookstore.repositories.AuthorRepository;
 import bg.softuni.onlinebookstore.repositories.AuthorSpecification;
 import bg.softuni.onlinebookstore.repositories.BookRepository;
+import bg.softuni.onlinebookstore.repositories.PictureRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class AuthorService {
-    private AuthorRepository authorRepository;
-    private BookRepository bookRepository;
-    private AuthorMapper authorMapper;
+    private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
+    private final AuthorMapper authorMapper;
+    private final PictureRepository pictureRepository;
+    private final CloudinaryService cloudinaryService;
 
-    public AuthorService(AuthorRepository authorRepository, BookRepository bookRepository, AuthorMapper authorMapper) {
+    public AuthorService(AuthorRepository authorRepository, BookRepository bookRepository, AuthorMapper authorMapper, PictureRepository pictureRepository, CloudinaryService cloudinaryService) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
         this.authorMapper = authorMapper;
+        this.pictureRepository = pictureRepository;
+        this.cloudinaryService = cloudinaryService;
     }
 
     public Page<AuthorOverviewDTO> getAllAuthors(Pageable pageable) {
@@ -52,7 +59,14 @@ public class AuthorService {
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public AuthorEntity addNewAuthor(AddNewAuthorDTO authorModel) {
+    public AuthorEntity addNewAuthor(AddNewAuthorDTO authorModel) throws IOException {
+        if (authorModel.getPicture() != null && !authorModel.getPicture().getOriginalFilename().isEmpty()) {
+            PictureEntity picture = new PictureEntity(cloudinaryService.upload(authorModel.getPicture()));
+            pictureRepository.save(picture);
+            AuthorEntity newAuthor = new AuthorEntity(authorModel, picture);
+            return authorRepository.save(newAuthor);
+        }
+
         AuthorEntity newAuthor = new AuthorEntity(authorModel);
         return authorRepository.save(newAuthor);
     }
@@ -63,11 +77,11 @@ public class AuthorService {
             return null;
         }
 
-        return authorMapper.authorEntityToAddNewAuthorDTO(authorOpt.get());
+        return new AddNewAuthorDTO(authorOpt.get());
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public AuthorEntity updateAuthor(AddNewAuthorDTO authorModel, Long id) {
+    public AuthorEntity updateAuthor(AddNewAuthorDTO authorModel, Long id) throws IOException {
         Optional<AuthorEntity> authorOpt = authorRepository.findById(id);
         if (authorOpt.isEmpty()) {
             return null;
@@ -77,7 +91,13 @@ public class AuthorService {
         author.setFirstName(authorModel.getFirstName());
         author.setLastName(authorModel.getLastName());
         author.setBiography(authorModel.getBiography());
-        author.setPhotoUrl(authorModel.getPhotoUrl());
+
+        if (authorModel.getPicture() != null && !authorModel.getPicture().getOriginalFilename().isEmpty()) {
+            PictureEntity picture = new PictureEntity(cloudinaryService.upload(authorModel.getPicture()));
+            pictureRepository.save(picture);
+            author.setPicture(picture);
+        }
+
         return authorRepository.save(author);
     }
 
