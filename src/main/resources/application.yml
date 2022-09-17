@@ -20,6 +20,10 @@ spring:
           facebook:
             clientId: 625004692465831
             clientSecret: ${FACEBOOK_CLIENT_SECRET}
+          google:
+            clientId: 462739601011-7qou3lsh8gnpl9hfn1oo2fipi49k11kg.apps.googleusercontent.com
+            clientSecret: ${GOOGLE_CLIENT_SECRET}
+
   servlet:
     multipart:
       max-file-size: 10MB
