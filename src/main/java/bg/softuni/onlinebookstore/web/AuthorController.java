@@ -34,7 +34,7 @@ public class AuthorController {
                                 @PageableDefault(
                                         sort = "lastName",
                                         direction = Sort.Direction.ASC,
-                                        size = 4) Pageable pageable) {
+                                        size = 3) Pageable pageable) {
         model.addAttribute("authors", authorService.getAllAuthors(pageable));
 
         return "authors";

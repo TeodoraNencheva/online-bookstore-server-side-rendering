@@ -76,7 +76,7 @@
     <h2 class="text-center text-white mt-5" th:if="${authors.size == 0}">No authors meeting the criteria</h2>
     <div class="offers row mx-auto d-flex flex-row justify-content-center">
         <div th:each="author : ${authors}"
-             th:object="${author}" class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">
+             th:object="${author}" class="offer card col-sm-6 col-md-3  col-lg-3 m-1 p-0">
             <div class="card-img-top-wrapper">
                 <img class="card-img-top" th:src="*{picture}" alt="Author image">
             </div>

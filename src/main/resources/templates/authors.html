@@ -23,7 +23,7 @@
 
     <div class="offers row mx-auto d-flex flex-row justify-content-center">
         <div th:each="author : ${authors.getContent()}"
-             th:object="${author}" class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">
+             th:object="${author}" class="offer card col-sm-6 col-md-4  col-lg-3 m-1 p-0">
             <div class="card-img-top-wrapper">
                 <img class="card-img-top" th:src="*{picture}" alt="Author image">
             </div>
