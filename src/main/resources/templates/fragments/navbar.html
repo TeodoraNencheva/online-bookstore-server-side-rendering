@@ -2,6 +2,9 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css">
+</head>
 
 <body>
 
@@ -17,7 +20,7 @@
                 <li class="nav-item">
                     <a class="nav-link"
 
-                       th:href="@{/}">Home</a>
+                       th:href="@{/}">Home <i class="fa fa-home" aria-hidden="true"></i></a>
                 </li>
 
                 <th:block>
@@ -47,7 +50,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="/" id="search" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Search
+                            Search <i class="fa fa-search" aria-hidden="true"></i>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="search">
                             <a class="dropdown-item" href="/books/search">Books</a>
@@ -60,7 +63,7 @@
                     <li class="nav-item">
                         <a class="nav-link"
 
-                           th:href="@{/cart}">Cart</a>
+                           th:href="@{/cart}">Cart <i class="fa fa-shopping-cart"></i></a>
                     </li>
 
                     <li class="nav-item">
@@ -88,11 +91,12 @@
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <div class="form-inline my-2 my-lg-0 px-3">
-                            <div class="text-white">Welcome,
-                                <th:block th:text="${#authentication.principal.fullName} + '!'">X</th:block>
-                            </div>
                             <form th:action="@{/users/logout}" th:method="post">
-                                <input class="btn btn-link nav-link" type="submit" value="Logout">
+                                <button class="btn btn-link nav-link" type="submit" >Logout
+                                    <i class="fas fa-sign-out-alt"></i></button>
+                                <div class="text-white">Welcome,
+                                    <th:block th:text="${#authentication.principal.fullName} + '!'">X</th:block>
+                                </div>
                             </form>
                         </div>
                     </li>
@@ -108,7 +112,7 @@
                     <li class="nav-item">
                         <a class="nav-link"
 
-                           th:href="@{/users/login}">Login</a>
+                           th:href="@{/users/login}">Login <i class="fas fa-sign-in-alt"></i></a>
                     </li>
                 </th:block>
             </ul>
