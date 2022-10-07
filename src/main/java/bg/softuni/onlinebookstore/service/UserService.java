@@ -71,6 +71,7 @@ public class UserService {
             newUser.setPassword(null);
             newUser.setFirstName(name.substring(0, name.indexOf(' ')));
             newUser.setLastName(name.substring(name.indexOf(' ') + 1));
+            newUser.setAccountVerified(true);
             newUser.addRole(getUserRole());
             userRepository.save(newUser);
         }

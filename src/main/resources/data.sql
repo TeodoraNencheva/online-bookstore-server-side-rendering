@@ -1,7 +1,13 @@
+insert into roles (name)
+values ('ADMIN'), ('USER');
+
 INSERT INTO users (first_name, last_name, email, password, account_verified)
 VALUES ('Admin', 'Adminov', 'admin@example.com', '8872e57546cbfea60f01b1270370d1337adc11b933ca26d6e7d4dc4619c7c51c239d529bc044b6b4', true),
        ('User', 'Userov', 'user@example.com', '8872e57546cbfea60f01b1270370d1337adc11b933ca26d6e7d4dc4619c7c51c239d529bc044b6b4', true),
        ('User2', 'Userov', 'user2@example.com', '8872e57546cbfea60f01b1270370d1337adc11b933ca26d6e7d4dc4619c7c51c239d529bc044b6b4', true);
+
+insert into users_roles (user_id, role_id)
+    values (1, 1), (2, 2), (3, 2);
 
 insert into pictures(url, public_id)
 values ('https://res.cloudinary.com/teodoran/image/upload/v1663583901/irsrpjxsl1tf4eotipch.jpg', 'irsrpjxsl1tf4eotipch'),
