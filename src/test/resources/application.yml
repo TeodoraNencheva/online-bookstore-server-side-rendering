@@ -28,7 +28,7 @@ secure:
     validity: 24
 site:
   base:
-    url: ${BASE_URL}
+    url: http://localhost:8080
 
 cloudinary:
   api-key: 468519295473947

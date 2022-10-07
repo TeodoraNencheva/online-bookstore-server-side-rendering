@@ -1,11 +1,11 @@
 spring:
   datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/bookstore?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
-    username: root
-    password: 1234
+    driverClassName: org.postgresql.Driver
+    url: ${JDBC_DATABASE_URL:}
+    username: ${JDBC_DATABASE_USERNAME:}
+    password: ${JDBC_DATABSE_PASSWORD:}
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: create-drop
     defer-datasource-initialization: true
@@ -63,10 +63,13 @@ secure:
     validity: 24
 site:
   base:
-    url: ${BASE_URL}
+    url: http://localhost:8080
 
 #cloudinary properties
 cloudinary:
   api-key: 468519295473947
   api-secret: ${CLOUDINARY_API_SECRET}
   cloud-name: teodoran
+
+server:
+  port: ${PORT:8080}
