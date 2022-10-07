@@ -23,7 +23,7 @@ async function loadBooksByAuthor(event) {
     event.preventDefault();
     const authorId = authorIdField.value;
 
-    fetch(`http://localhost:8080/api/books?authorId=${authorId}`)
+    fetch(`https://polar-plains-86954.herokuapp.com/api/books?authorId=${authorId}`)
         .then(res => res.json())
         .then(data => {
             if(booksSection.childElementCount === 0) {

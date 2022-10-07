@@ -21,7 +21,7 @@ async function buyBook(event) {
         return p;
     }
 
-    fetch('http://localhost:8080/api/cart', {
+    fetch('https://polar-plains-86954.herokuapp.com/api/cart', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
