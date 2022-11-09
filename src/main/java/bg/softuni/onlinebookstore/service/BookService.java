@@ -66,22 +66,14 @@ public class BookService {
     }
 
     public Page<BookOverviewDTO> getBooksByGenre(String genre, Pageable pageable) {
-        String genreName = getGenreName(genre);
-        Optional<GenreEntity> genreOpt = genreRepository.findByName(genreName);
+        Optional<GenreEntity> genreOpt = genreRepository.findByName(genre);
 
         if (genreOpt.isEmpty()) {
-            throw new GenreNotFoundException(genreName);
+            throw new GenreNotFoundException(genre);
         }
 
         return bookRepository.getAllByGenre(genreOpt.get(), pageable)
                 .map(bookMapper::bookEntityToBookOverviewDTO);
-    }
-
-    public String getGenreName(String genre) {
-        genre = genre.trim().toLowerCase();
-        return Arrays.stream(genre.split("_"))
-                .map(word -> String.valueOf(word.charAt(0)).toUpperCase() + word.substring(1))
-                .collect(Collectors.joining(" "));
     }
 
     public List<BookOverviewDTO> getBooksByAuthor(Long authorId) {

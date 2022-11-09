@@ -53,7 +53,7 @@ public class BookController {
                                           direction = Sort.Direction.ASC,
                                           size = 5) Pageable pageable) {
         model.addAttribute("books", bookService.getBooksByGenre(genre, pageable));
-        model.addAttribute("title", bookService.getGenreName(genre));
+        model.addAttribute("title", genre);
         model.addAttribute("type", genre);
 
 

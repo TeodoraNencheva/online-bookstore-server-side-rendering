@@ -2,9 +2,9 @@ insert into roles (name)
 values ('ADMIN'), ('USER');
 
 INSERT INTO users (first_name, last_name, email, password, account_verified)
-VALUES ('Admin', 'Adminov', 'admin@example.com', '8872e57546cbfea60f01b1270370d1337adc11b933ca26d6e7d4dc4619c7c51c239d529bc044b6b4', true),
-       ('User', 'Userov', 'user@example.com', '8872e57546cbfea60f01b1270370d1337adc11b933ca26d6e7d4dc4619c7c51c239d529bc044b6b4', true),
-       ('User2', 'Userov', 'user2@example.com', '8872e57546cbfea60f01b1270370d1337adc11b933ca26d6e7d4dc4619c7c51c239d529bc044b6b4', true);
+VALUES ('Admin', 'Adminov', 'admin@example.com', 'd887462d9d2a22af2d47d6a857970955c4da4efda4690218027103ceeb675e621d15887c0aa30f51', true),
+       ('User', 'Userov', 'user@example.com', 'd887462d9d2a22af2d47d6a857970955c4da4efda4690218027103ceeb675e621d15887c0aa30f51', true),
+       ('User2', 'Userov', 'user2@example.com', 'd887462d9d2a22af2d47d6a857970955c4da4efda4690218027103ceeb675e621d15887c0aa30f51', true);
 
 insert into users_roles (user_id, role_id)
     values (1, 1), (2, 2), (3, 2);
