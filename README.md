@@ -8,3 +8,6 @@
 #### 1.2. as admin: username: admin@example.com and password: 1234
 
 ### 2. OAuth2 Login - the application support login via Facebook and Google account
+
+### 3. Exception handling
+* via @ControllerAdvice, @ExceptionHandler and error.html, 403.html and 500.html error templates
