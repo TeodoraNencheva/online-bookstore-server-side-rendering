@@ -3,7 +3,7 @@ spring:
     driverClassName: org.postgresql.Driver
     url: ${JDBC_DATABASE_URL:}
     username: ${JDBC_DATABASE_USERNAME:}
-    password: ${JDBC_DATABSE_PASSWORD:}
+    password: ${JDBC_DATABASE_PASSWORD:}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -18,7 +18,7 @@ spring:
       client:
         registration:
           facebook:
-            clientId: 625004692465831
+            clientId: 1184961418845513
             clientSecret: ${FACEBOOK_CLIENT_SECRET}
           google:
             clientId: 462739601011-7qou3lsh8gnpl9hfn1oo2fipi49k11kg.apps.googleusercontent.com
