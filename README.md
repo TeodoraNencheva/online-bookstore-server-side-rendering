@@ -1,9 +1,10 @@
-# online-bookstore-heroku
-Spring Boot project for the final Spring exam at SoftUni. The project uses server side rendering with Thymeleaf.
+# Online Bookstore
+## The application has the same business logic as the project https://github.com/TeodoraNencheva/online-bookstore-backend but instead of exposing REST API, it uses Thymeleaf for Server Side Rendering. The project is available at https://polar-plains-86954.herokuapp.com
+## Both applications have identical database, maintenance interceptor, schedular, Cloudinary integration and business logic.
 
-To login into user's go to https://polar-plains-86954.herokuapp.com/users/login (or http://localhost:8080/users/login if running the app locally) with either of these:
+## Differences
+### 1. Authentication
+#### 1.1. as regular user(customer): username: user@example.com or user2@example.com and password: 1234
+#### 1.2. as admin: username: admin@example.com and password: 1234
 
-email: user@example.com, password: 1234 or email: user2@example.com, password: 1234
-
-To login into admin's account go to https://polar-plains-86954.herokuapp.com/users/login (or http://localhost:8080/users/login if running the app locally) 
-with email: admin@example.com and password: 1234.
+### 2. OAuth2 Login - the application support login via Facebook and Google account
