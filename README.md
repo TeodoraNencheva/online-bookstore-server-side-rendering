@@ -1,5 +1,5 @@
 # Online Bookstore
-## The application has the same business logic as the project https://github.com/TeodoraNencheva/online-bookstore-backend but instead of exposing REST API, it uses Thymeleaf for Server Side Rendering. The project is available at https://polar-plains-86954.herokuapp.com
+## The application has the same business logic as the project https://github.com/TeodoraNencheva/online-bookstore-backend but instead of exposing REST API, it uses Thymeleaf for Server Side Rendering.
 ## Both applications have identical database, maintenance interceptor, schedular, Cloudinary integration and business logic.
 
 ## Differences
